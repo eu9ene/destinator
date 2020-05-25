@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
 
@@ -28,35 +28,39 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import MenuIcon from '@material-ui/icons/Menu';
 
-//
-// const initialState = {
-//   suggestions: [],
-//   search: [{ displayName: "three"}] };
-//
-// function reducer(state = initialState, action) {
-//   switch (action.type) {
-//     case "SEARCHED_FINISHED":
-//       return {
-//         ...state,
-//         search: action.payload.result
-//       };
-//     case "loadSuggestionsComplete":
-//       return {
-//         ...state,
-//         suggestions: action.payload.result
-//       };
-//     default:
-//       return state;
-//   }
-// }
-//
-// let store = createStore(reducer, applyMiddleware(thunk));
+
+const initialState = {
+  suggestions: [],
+  attractions: []
+};
+
+const SEARCH_FINISHED = "SEARCHED_FINISHED";
+
+
+function reducer(state = initialState, action) {
+  switch (action.type) {
+    case SEARCH_FINISHED:
+      return {
+        ...state,
+        attractions: action.payload.result
+      };
+    case "loadSuggestionsComplete":
+      return {
+        ...state,
+        suggestions: action.payload.result
+      };
+    default:
+      return state;
+  }
+}
+
+let store = createStore(reducer, applyMiddleware(thunk));
 
 // ---------------------------------
 
 // const Button = React.memo(props => {
 //   const { onClick1 } = props;
-
+//
 //   return (
 //     <div style={{ backgroundColor: "red" }} className="asdf" onClick={onClick1}>
 //       Click me
@@ -64,26 +68,52 @@ import MenuIcon from '@material-ui/icons/Menu';
 //   );
 // });
 
-// ---------------------------------
-//
-// function loadDataCommand(searchQuery) {
-//   return function(dispatch) {
-//     return fetch(
-//       `https://ingress.pressreader.com/services/catalog/publications?accessToken=arSMctWAreCtMGvgwgjgyOJ-KfjWzWmAqKPxGmbuJj-xKykPCLyaTbJqP7o0OjCu2f0nnxoouy76oJltoPTiaKXBMxhJOztTbFxMTsAPpys!&limit=5&orderBy=searchrank+desc&q=${searchQuery}`
-//     )
-//       .then(searchResult => searchResult.json())
-//       .then(searchResult => dispatch(loadDataDone(searchResult.items)));
-//   };
-// }
-//
-// function loadDataDone(result) {
-//   return {
-//     type: "SEARCHED_FINISHED",
-//     payload: {
-//       result: result
-//     }
-//   };
-// }
+//---------------------------------
+
+function searchCommand(searchQuery) {
+  return function(dispatch) {
+        return fetch('http://0.0.0.0:8000/search',
+             {
+                method: "POST",
+                body: JSON.stringify({query: searchQuery})
+            })
+      .then(searchResult => searchResult.json())
+      .then(searchResult => dispatch(searchDone(searchResult)));
+  };
+}
+
+function findSimilarCommand(id) {
+  return function(dispatch) {
+        return fetch('http://0.0.0.0:8000/similar',
+             {
+                method: "POST",
+                body: JSON.stringify({id: id})
+            })
+      .then(searchResult => searchResult.json())
+      .then(searchResult => dispatch(searchDone(searchResult)));
+  };
+}
+
+function findNearbyCommand(id) {
+  return function(dispatch) {
+        return fetch('http://0.0.0.0:8000/nearby',
+             {
+                method: "POST",
+                body: JSON.stringify({id: id})
+            })
+      .then(searchResult => searchResult.json())
+      .then(searchResult => dispatch(searchDone(searchResult)));
+  };
+}
+
+function searchDone(result) {
+  return {
+    type: SEARCH_FINISHED,
+    payload: {
+      result: result
+    }
+  };
+}
 //
 // function queryChangedCommand(searchQuery) {
 //   return function(dispatch) {
@@ -107,9 +137,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 // ---------------------------------
 //
-// const getSearchList = state => {
-//   return state.search;
-// };
+const getAttractions = state => {
+  return state.attractions;
+};
 //
 //
 // const getSuggestions = state => {
@@ -193,50 +223,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 //   </>;
 // });
 
-//
-// const data = [
-//     {
-//         id: 1,
-//         name: 'Stanley park',
-//         img: 'https://media-cdn.tripadvisor.com/media/photo-s/01/45/cc/b8/jericho-beach.jpg',
-//         rating: 4.5,
-//         website: 'http://google.com',
-//         desc: 'Hello world'
-//     },
-//     {
-//         id: 2,
-//         name: 'Steveston',
-//         img: 'https://media-cdn.tripadvisor.com/media/photo-s/01/45/cc/b8/jericho-beach.jpg',
-//         rating: 4.0,
-//         website: 'http://google.com',
-//         desc: 'Hello world'
-//     },
-//     {
-//         id: 3,
-//         name: 'Garibaldi lake',
-//         img: 'https://media-cdn.tripadvisor.com/media/photo-s/01/45/cc/b8/jericho-beach.jpg',
-//         rating: 3.5,
-//         website: 'http://google.com',
-//         desc: 'Hello world'
-//     },
-//     {
-//         id: 4,
-//         name: 'Mount Pleasant',
-//         img: 'https://media-cdn.tripadvisor.com/media/photo-s/01/45/cc/b8/jericho-beach.jpg',
-//         rating: 4.7,
-//         website: 'http://google.com',
-//         desc: 'Hello world'
-//     },
-//     {
-//         id: 5,
-//         name: 'Victoria',
-//         img: 'https://media-cdn.tripadvisor.com/media/photo-s/01/45/cc/b8/jericho-beach.jpg',
-//         rating: 5.0,
-//         website: 'http://google.com',
-//         desc: 'Hello world'
-//     }
-// ];
-
 
 // const useStyles = makeStyles((theme) => ({
 //     gridList: {
@@ -256,13 +242,14 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 const cardStyles = makeStyles({
     root: {
-        maxWidth: 345,
+        Width: 300,
     },
 });
 
 function ImgMediaCard(props) {
     const classes = cardStyles();
     const attr = props.attr;
+    const dispatch = useDispatch();
 
     return (
         <Card className={classes.root}>
@@ -284,11 +271,11 @@ function ImgMediaCard(props) {
                 </CardContent>
             </CardActionArea>
             <CardActions>
-                <Button size="small" color="primary">
-                    Share
+                <Button size="small" color="primary" onClick={e => dispatch(findSimilarCommand(attr.id))}>
+                    Similar
                 </Button>
-                <Button size="small" color="primary">
-                    Learn More
+                <Button size="small" color="primary" onClick={e => dispatch(findNearbyCommand(attr.id))}>
+                    Nearby
                 </Button>
             </CardActions>
         </Card>
@@ -296,14 +283,15 @@ function ImgMediaCard(props) {
 }
 
 function Attractions(props) {
-    const attrs = props.attrs;
+    // const attrs = props.attrs;
+    const attractions = useSelector(getAttractions);
 
     // const classes = useStyles();
     return <GridList cellHeight={200}
                      // className={classes.gridList}
         spacing={3}
                      cols={4}>
-        {attrs.map((attr) => (
+        {attractions.map((attr) => (
             // <GridListTile key={attr.name} cols={1}>
             <ImgMediaCard attr={attr}/>
 
@@ -314,56 +302,27 @@ function Attractions(props) {
 
 }
 
-class Search extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            attrs: [],
-            searchText: ''
-        };
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
+function Search(props) {
+    const dispatch = useDispatch();
+    const [input, setInput] = useState('');
+    const onClick = (e) => dispatch(searchCommand(input));
 
-    handleChange(event) {
-        this.setState({searchText: event.target.value});
-    }
-
-    handleSubmit(event) {
-        const searhStr = this.state.searchText;
-
-        fetch('http://0.0.0.0:8000/search',
-             {
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json'
-                },
-                method: "POST",
-                body: JSON.stringify({query: searhStr})
-            })
-      .then(searchResult => searchResult.json())
-            // .then(searchResult  => console.log(searchResult));
-      .then(attrs => this.setState({attrs: attrs}));
-
-
-    }
-
-    render() {
-
-        return <>
-            <Grid item xs={12}/>
-            <Grid item xs={6}>
-                <TextField id="outlined-basic" label="destination" variant="outlined" value={this.state.searchText}
-                           onChange={this.handleChange}/>
-            </Grid>
-            <Grid item xs={6}>
-                <Button variant="contained" color="primary" size="large" onClick={this.handleSubmit}>Search</Button>
-            </Grid>
-            <Grid item xs={12}>
-                <Attractions attrs={this.state.attrs}/>
-            </Grid>
-        </>
-    }
+    return <>
+        <Grid item xs={12}/>
+        <Grid item xs={6}>
+            <TextField id="outlined-basic" label="destination" variant="outlined"
+                       value={input}
+                       onChange={e => setInput(e.target.value)}
+            />
+        </Grid>
+        <Grid item xs={6}>
+            <Button variant="contained" color="primary" size="large"
+                    onClick={onClick}>Search</Button>
+        </Grid>
+        <Grid item xs={12}>
+            <Attractions />
+        </Grid>
+    </>
 }
 
 
@@ -383,6 +342,7 @@ function App() {
     const classes = rootStyles();
 
     return (
+        <Provider store={store}>
         <div className={classes.root}>
             <link rel="stylesheet"
                   href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"/>
@@ -401,6 +361,7 @@ function App() {
                 </Grid>
             </Container>
         </div>
+            </Provider>
 
         // <Provider store={store}>
         // <div className="App">
