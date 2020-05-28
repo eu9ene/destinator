@@ -8,7 +8,7 @@ from starlette_prometheus import metrics, PrometheusMiddleware
 from pythonjsonlogger.jsonlogger import JsonFormatter
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.contracts import SearchRequest, SimilarRequest, NearbyRequest, Attraction
+from api.contracts import SearchRequest, SimilarRequest, NearbyRequest, Attraction, ByIdRequest
 from api.services import ElasticSearchService
 
 api = FastAPI()
@@ -67,6 +67,11 @@ async def similar(request: SimilarRequest):
 @api.post("/nearby", response_model=List[Attraction])
 async def nearby(request: NearbyRequest):
     return es_service.nearby(request)
+
+
+@api.post("/byid", response_model=Attraction)
+async def byid(request: ByIdRequest):
+    return es_service.byid(request)
 
 
 if __name__ == "__main__":

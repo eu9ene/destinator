@@ -8,7 +8,23 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import {Search} from "./components/search";
 import store from "./redux/store";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import {ThemeProvider, createMuiTheme} from "@material-ui/core/styles";
+import {Home} from "./components/home";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import {
+    Link,
+    BrowserRouter as Router,
 
+} from "react-router-dom";
+import {
+    Switch,
+    Route,
+
+    useParams,
+    useHistory
+} from "react-router"
+import {Place} from "./components/place";
 
 // const rootStyles = makeStyles((theme) => ({
 //     root: {
@@ -21,66 +37,73 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 // }));
 
 
-// const useStyles = makeStyles((theme) => ({
-//   mainGrid: {
-//     marginTop: theme.spacing(3),
-//   },
-// }));
+const useStyles = makeStyles((theme) => ({
+    mainGrid: {
+        marginTop: theme.spacing(3),
+    },
+    appBar: {
+        // backgroundColor: theme.palette.background.paper,
 
-import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+    },
+    home: {
+        marginTop: '80px'
+    }
+}));
+
 
 const themeX = createMuiTheme({
-  palette: {
-    type: "light"
-  }
+    palette: {
+        type: "light"
+    },
+
 });
 
 function App() {
-    // const classes = useStyles();
+    const classes = useStyles();
 
     return (
-//         <Provider store={store}>
-//             <meta
-//   name="viewport"
-//   content="minimum-scale=1, initial-scale=1, width=device-width"
-// />
-//             <div className={classes.root}>
-//                 <link rel="stylesheet"
-//                       href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"/>
-//                 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
-//
-//                 <Container maxWidth="md">
-//
-//                     <Grid
-//                         container
-//                         direction="row"
-//                         justify="center"
-//                         alignItems="center"
-//                     >
-//
-//                         <Search/>
-//                     </Grid>
-//                 </Container>
-//             </div>
-//         </Provider>
-
         <Provider store={store}>
             <ThemeProvider theme={themeX}>
-            <div className="App">
-                <header>
-                    <meta
-                        name="viewport"
-                        content="minimum-scale=1, initial-scale=1, width=device-width"
-                    />
-                    <link rel="stylesheet"
-                          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"/>
-                    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
-                </header>
-                <CssBaseline/>
-                <Container maxWidth="lg">
-                    <Search/>
-                </Container>
-            </div>
+                <Router>
+                    <div className="App">
+                        <header>
+                            <meta
+                                name="viewport"
+                                content="minimum-scale=1, initial-scale=1, width=device-width"
+                            />
+                            <link rel="stylesheet"
+                                  href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"/>
+                            <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+                        </header>
+                        <CssBaseline/>
+                        <Container maxWidth="lg">
+                            <Grid container spacing={3}>
+                                <Grid item xs={12}>
+                                    <AppBar className={classes.appBar} elevation={1}
+                                            position="fixed"
+                                            color="transparent"
+                                    >
+                                        <Toolbar>
+                                            <Search/>
+                                        </Toolbar>
+                                    </AppBar>
+                                </Grid>
+                                <Grid item xs={12}>
+
+                                    <Switch>
+                                        <Route exact path='/'>
+                                            <Home className={classes.home}/>
+                                        </Route>
+                                        <Route path={`/place/:id`}>
+                                            <Place/>
+                                        </Route>
+                                    </Switch>
+
+                                </Grid>
+                            </Grid>
+                        </Container>
+                    </div>
+                </Router>
             </ThemeProvider>
         </Provider>
     );

@@ -2,7 +2,7 @@ from typing import Dict
 
 from elasticsearch import Elasticsearch
 
-from api.contracts import SearchRequest, Attraction, NearbyRequest, SimilarRequest
+from api.contracts import SearchRequest, Attraction, NearbyRequest, SimilarRequest, ByIdRequest
 
 
 class ElasticSearchService:
@@ -10,8 +10,25 @@ class ElasticSearchService:
         self._index = index
         self._es = Elasticsearch(hosts=hosts)
 
+    def byid(self, request: ByIdRequest):
+        query = {
+            "query": {
+                "term": {
+                    "_id": {
+                        "value": request.id
+                    }
+                }
+
+            }
+        }
+
+        attrs = self._search_attrs(query)
+        return attrs[0]
+
     def search(self, request: SearchRequest):
         query = {
+            "size": request.count,
+            "from": request.skip,
             "query": {
                 "bool": {
                     "must": [{
@@ -49,7 +66,8 @@ class ElasticSearchService:
         emb = res['hits']['hits'][0]['_source']['embedding']
 
         query = {
-            "size": 10,
+            "size": request.count,
+            "from": request.skip,
             "query": {
                 "script_score": {
                     "query": {
@@ -92,6 +110,8 @@ class ElasticSearchService:
         res = self._es.search(index=self._index, body=query)
 
         query = {
+            "size": request.count,
+            "from": request.skip,
             "query": {
                 "bool": {
                     "must": {
@@ -127,8 +147,8 @@ class ElasticSearchService:
 
         photos = hit['_source']['photo']['images']
 
-        if "small" in photos:
-            return photos['small']['url']
+        if "medium" in photos:
+            return photos['medium']['url']
 
         return ""
 
