@@ -10,7 +10,7 @@ import Rating from "@material-ui/lab/Rating";
 import {getAttractions, getHasMore} from "../redux/selectors";
 import Grid from "@material-ui/core/Grid";
 import React from "react";
-import { useHistory } from 'react-router';
+import {useHistory} from 'react-router';
 
 const mediaStyles = makeStyles((theme) => ({
     img: {
@@ -31,14 +31,14 @@ function ImgMediaCard(props) {
             {/*<CardActionArea onClick={() => dispatch(findSimilarCommand(attr.id, history))}>*/}
             <CardActionArea onClick={() => history.push(`/place/${attr.id}`)}>
 
-
+                {attr.image &&
                 <CardMedia
                     component="img"
                     alt={attr.name}
                     image={attr.image}
                     title={attr.name}
                     className={classes.img}
-                />
+                />}
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
                         {attr.name}

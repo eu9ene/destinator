@@ -19,6 +19,7 @@ import {
 } from "react-router"
 import {Place} from "./components/place";
 import ScrollToTop from "./components/scroll";
+import Avatar from "@material-ui/core/Avatar";
 
 
 // const rootStyles = makeStyles((theme) => ({
@@ -86,6 +87,7 @@ function App() {
                                     >
                               <Toolbar>
                                             <Search/>
+                                            <Avatar>H</Avatar>
                                         </Toolbar>
                                     </AppBar>
                         <Container maxWidth="lg" className={classes.main}>
