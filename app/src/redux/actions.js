@@ -1,4 +1,4 @@
-import {LOAD_PLACE_FINISHED, SEARCH_FINISHED} from "./actionTypes";
+import {LOAD_PLACE_FINISHED, PLACE_IS_LOADING, SEARCH_FINISHED} from "./actionTypes";
 import {pageSize} from "./constants";
 
 
@@ -20,18 +20,19 @@ export function searchCommand(searchQuery, history, skip = 0) {
 
 export function loadPlaceCommand(id) {
     return function (dispatch) {
+        // dispatch(placeIsLoading());
         return fetch('http://0.0.0.0:8000/byid',
             {
                 method: "POST",
                 body: JSON.stringify({id: id})
             })
             .then(searchResult => searchResult.json())
-            .then(searchResult => dispatch(loadPlaceDone(searchResult)));
+            .then(searchResult => dispatch(loadPlaceDone(searchResult, id)));
 
     };
 }
 
-export function findSimilarCommand(id, history) {
+export function findSimilarCommand(id) {
     return function (dispatch) {
         return fetch('http://0.0.0.0:8000/similar',
             {
@@ -39,8 +40,7 @@ export function findSimilarCommand(id, history) {
                 body: JSON.stringify({id: id, count: pageSize})
             })
             .then(searchResult => searchResult.json())
-            .then(searchResult => dispatch(searchDone(searchResult)))
-            .then(history.push(`/place/${id}`));
+            .then(searchResult => dispatch(searchDone(searchResult)));
     };
 }
 
@@ -65,11 +65,18 @@ export function searchDone(result) {
     };
 }
 
-export function loadPlaceDone(result) {
+export function loadPlaceDone(result, id) {
     return {
         type: LOAD_PLACE_FINISHED,
         payload: {
-            result: result
+            place: result,
+            id: id
         }
+    };
+}
+
+export function placeIsLoading() {
+    return {
+        type: PLACE_IS_LOADING
     };
 }

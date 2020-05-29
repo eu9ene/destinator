@@ -28,8 +28,9 @@ function ImgMediaCard(props) {
 
     return (
         <Card>
-            <CardActionArea onClick={() => dispatch(findSimilarCommand(attr.id, history))}>
-            {/*<CardActionArea onClick={() => history.push(`/place/${attr.id}`)}>*/}
+            {/*<CardActionArea onClick={() => dispatch(findSimilarCommand(attr.id, history))}>*/}
+            <CardActionArea onClick={() => history.push(`/place/${attr.id}`)}>
+
 
                 <CardMedia
                     component="img"

@@ -1,30 +1,25 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import {Provider} from "react-redux";
+import {Provider, useSelector} from "react-redux";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {Search} from "./components/search";
-import store from "./redux/store";
+import configureStore, {history} from "./redux/store";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import {ThemeProvider, createMuiTheme} from "@material-ui/core/styles";
 import {Home} from "./components/home";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import {
-    Link,
-    BrowserRouter as Router,
+import {ConnectedRouter} from 'connected-react-router'
 
-} from "react-router-dom";
 import {
     Switch,
-    Route,
-
-    useParams,
-    useHistory
+    Route, withRouter
 } from "react-router"
 import {Place} from "./components/place";
+import ScrollToTop from "./components/scroll";
+
 
 // const rootStyles = makeStyles((theme) => ({
 //     root: {
@@ -45,7 +40,10 @@ const useStyles = makeStyles((theme) => ({
         // backgroundColor: theme.palette.background.paper,
 
     },
-    home: {
+    // home: {
+    //     marginTop: '80px'
+    // },
+    main: {
         marginTop: '80px'
     }
 }));
@@ -58,13 +56,19 @@ const themeX = createMuiTheme({
 
 });
 
+
+const store = configureStore();
+
+
 function App() {
     const classes = useStyles();
 
     return (
         <Provider store={store}>
-            <ThemeProvider theme={themeX}>
-                <Router>
+            <ConnectedRouter history={history}>
+                <ScrollToTop/>
+                <ThemeProvider theme={themeX}>
+
                     <div className="App">
                         <header>
                             <meta
@@ -76,35 +80,30 @@ function App() {
                             <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
                         </header>
                         <CssBaseline/>
-                        <Container maxWidth="lg">
-                            <Grid container spacing={3}>
-                                <Grid item xs={12}>
-                                    <AppBar className={classes.appBar} elevation={1}
+                          <AppBar className={classes.appBar} elevation={1}
                                             position="fixed"
-                                            color="transparent"
+                                            color="inherit"
                                     >
-                                        <Toolbar>
+                              <Toolbar>
                                             <Search/>
                                         </Toolbar>
                                     </AppBar>
-                                </Grid>
+                        <Container maxWidth="lg" className={classes.main}>
+                            <Grid container spacing={3}>
                                 <Grid item xs={12}>
-
                                     <Switch>
                                         <Route exact path='/'>
                                             <Home className={classes.home}/>
                                         </Route>
-                                        <Route path={`/place/:id`}>
-                                            <Place/>
-                                        </Route>
+                                        <Route path={`/place/:id`} component={Place}/>
                                     </Switch>
-
                                 </Grid>
                             </Grid>
                         </Container>
                     </div>
-                </Router>
-            </ThemeProvider>
+
+                </ThemeProvider>
+            </ConnectedRouter>
         </Provider>
     );
 }
