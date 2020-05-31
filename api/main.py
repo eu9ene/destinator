@@ -11,8 +11,8 @@ from api.config import AppConfig
 from api.routers import myplaces, search, recs
 
 api = FastAPI()
+
 api.add_middleware(PrometheusMiddleware)
-api.add_route("/metrics", metrics)
 api.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -20,6 +20,11 @@ api.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+api.add_route("/metrics", metrics)
+api.include_router(myplaces.router, prefix="/myplaces", tags=["myplaces"])
+api.include_router(search.router, prefix="/search", tags=["search"])
+api.include_router(recs.router, prefix="/recs", tags=["recommendations"])
 
 new_stream_handler = logging.StreamHandler()
 new_stream_handler.setLevel(AppConfig.LOG_LEVEL)
@@ -49,10 +54,6 @@ async def root():
 async def status():
     return responses.PlainTextResponse('alive')
 
-
-api.include_router(myplaces.router, prefix="/myplaces", tags=["myplaces"])
-api.include_router(search.router, prefix="/search", tags=["search"])
-api.include_router(recs.router, prefix="/recs", tags=["recommendations"])
 
 if __name__ == "__main__":
     uvicorn.run(api, host="0.0.0.0", port=AppConfig.API_PORT)

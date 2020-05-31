@@ -24,6 +24,10 @@ class ElasticSearchService:
         res = self._es.mget(index=self._index, body=body)
         return res['docs']
 
+    def get_doc_by_id(self, doc_id: str) -> Dict:
+        res = self._es.get(index=self._index, id=doc_id)
+        return res
+
     def search_by_name(self, name: str, count: int, skip: int) -> List[PlaceLight]:
         query = {
             "size": count,
@@ -126,7 +130,7 @@ class ElasticSearchService:
 
         return ""
 
-    def _get_attrs(self, docs):
+    def _get_attrs(self, docs: List[Dict]) -> List[Place]:
         attrs = [Place(id=hit['_id'],
                        name=hit["_source"]['name'],
                        rating=hit["_source"].get('rating') or None,

@@ -23,9 +23,9 @@ async def my_places(request: GetMyPlacesRequest, store: MyPlacesStore = Depends(
 
 @router.post("/add")
 async def add_my_place(request: AddPlaceRequest, store: MyPlacesStore = Depends(di.get_myplaces)):
-    await store.add_my_place(request)
+    store.add_my_place(request)
 
 
 @router.post("/remove")
 async def remove_my_place(request: RemovePlaceRequest, store: MyPlacesStore = Depends(di.get_myplaces)):
-    await store.remove_my_place(request)
+    store.remove_my_place(request)
