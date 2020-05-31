@@ -12,6 +12,7 @@ starlette_prometheus = "^0.6.0"
 uvicorn = "^0.11.5"
 fastapi = "^0.55.1"
 python-json-logger = "^0.1.11"
+pytest = "^5.4.2"
 
 [tool.poetry.dev-dependencies]
 tensorboard = "^2.2.1"

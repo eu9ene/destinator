@@ -6,7 +6,7 @@ from core.my_places import MyPlacesStore
 from core.recommender import Recommender
 from core.storage import Storage, InMemoryStorage
 
-container = None  # type: Optional[DiContainer]
+container = None  # place_type: Optional[DiContainer]
 
 
 def init():

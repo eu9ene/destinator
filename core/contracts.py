@@ -33,16 +33,16 @@ class ByIdsRequest(BaseModel):
 
 class AddPlaceRequest(BaseModel):
     id: str = Field(..., title='Attraction id')
-    type: PlaceType = Field(..., title='My places type')
+    type: PlaceType = Field(..., title='My places place_type')
 
 
 class RemovePlaceRequest(BaseModel):
     id: str = Field(..., title='Attraction id')
-    type: PlaceType = Field(..., title='My places type')
+    type: PlaceType = Field(..., title='My places place_type')
 
 
 class GetMyPlacesRequest(BaseModel):
-    type: PlaceType = Field(..., title='My places type')
+    type: PlaceType = Field(..., title='My places place_type')
 
 
 class SimilarRequest(BaseModel):
