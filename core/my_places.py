@@ -1,23 +1,16 @@
 from core.contracts import GetMyPlacesRequest, AddPlaceRequest, RemovePlaceRequest, PlaceType
-from core.es_service import ElasticSearchService
+
 from core.storage import Storage
 
 
 class MyPlacesStore:
-    def __init__(self, storage: Storage, es_service: ElasticSearchService):
-        self._es_service = es_service
+    def __init__(self, storage: Storage):
         self._store = storage
 
     def my_places_ids(self, request: GetMyPlacesRequest):
         key = self._get_key(request.type)
         data = self._store.load(key)
         return list(data) if data is not None else []
-
-    def my_places(self, request: GetMyPlacesRequest):
-        ids = self.my_places_ids(request)
-        if not ids:
-            return []
-        return self._es_service.get_places_by_ids(ids)
 
     def add_my_place(self, request: AddPlaceRequest):
         key = self._get_key(request.type)

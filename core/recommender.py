@@ -12,19 +12,22 @@ class Recommender:
         self._es_service = es_service
         self._my_places = my_places
 
-    def personal(self, request: PersonalRequest):
+    def personal(self, request: PersonalRequest) -> List[Place]:
         places_ids = self._my_places.my_places_ids(GetMyPlacesRequest(type=PlaceType.loved))
+        if not places_ids:
+            return []
+
         docs = self._es_service.get_docs_by_ids(places_ids)
 
         embs = np.array([doc['_source']['embedding'] for doc in docs])
         mean_emb = embs.mean(axis=0)
 
-        return self._es_service.search_by_emb(mean_emb, count=request.count, skip=request.skip)
+        return self._es_service.search_by_emb(mean_emb, exclude=places_ids, count=request.count, skip=request.skip)
 
     def similar(self, request: SimilarRequest) -> List[Place]:
         res = self._es_service.get_doc_by_id(request.id)
         emb = res['_source']['embedding']
-        return self._es_service.search_by_emb(emb, request.count, request.skip)
+        return self._es_service.search_by_emb(emb, exclude=[request.id], count=request.count, skip=request.skip)
 
     def nearby(self, request: NearbyRequest) -> List[Place]:
         doc = self._es_service.get_doc_by_id(request.id)

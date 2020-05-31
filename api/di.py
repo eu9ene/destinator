@@ -39,7 +39,7 @@ class DiContainer:
     def __init__(self):
         self.es_service = ElasticSearchService(AppConfig.ES_HOST, AppConfig.ES_INDEX)
         self.store = InMemoryStorage()
-        self.my_places = MyPlacesStore(self.store, self.es_service)
+        self.my_places = MyPlacesStore(self.store)
         self.recommender = Recommender(self.my_places, self.es_service)
 
     def shutdown(self):

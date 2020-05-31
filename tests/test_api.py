@@ -33,7 +33,9 @@ def test_similar():
         response = client.post('/recs/similar', json={'id': place_id, 'count': 5})
 
         assert response.status_code == 200
-        assert len(response.json()) == 5
+        data = response.json()
+        assert len(data) == 5
+        assert place_id not in [v['id'] for v in data]
 
 
 def test_nearby():
@@ -57,7 +59,10 @@ def test_personal():
         response = client.post('/recs/personal', json={'count': 5})
 
         assert response.status_code == 200
-        assert len(response.json()) == 5
+        data = response.json()
+        assert len(data) == 5
+        for place_id in places_ids:
+            assert place_id not in [v['id'] for v in data]
 
 
 @pytest.mark.parametrize('place_type', ['been', 'loved', 'bucketList'])

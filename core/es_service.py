@@ -54,7 +54,7 @@ class ElasticSearchService:
 
         return attrs
 
-    def search_by_emb(self, emb: List[float], count: int, skip: int) -> List[Place]:
+    def search_by_emb(self, emb: List[float], exclude: List[str], count: int, skip: int = 0) -> List[Place]:
         query = {
             "size": count,
             "from": skip,
@@ -66,6 +66,14 @@ class ElasticSearchService:
                                 {
                                     "match": {
                                         "category": "attraction"
+                                    }
+                                }
+                            ],
+                            "must_not": [
+                                {
+                                    "ids": {
+                                        "values": exclude
+
                                     }
                                 }
                             ]
