@@ -1,6 +1,13 @@
+from enum import Enum
 from typing import Optional, List
 
 from pydantic import BaseModel, Field
+
+
+class PlaceType(str, Enum):
+    been = 'been'
+    loved = 'loved'
+    bucketList = 'bucketList'
 
 
 class SearchRequest(BaseModel):
@@ -15,22 +22,27 @@ class NearbyRequest(BaseModel):
     skip: int = Field(0, title='Number of items ot skip')
 
 
+class PersonalRequest(BaseModel):
+    count: int = Field(..., title='Number of items')
+    skip: int = Field(0, title='Number of items ot skip')
+
+
 class ByIdsRequest(BaseModel):
     ids: List[str] = Field(..., title='Attraction ids')
 
 
 class AddPlaceRequest(BaseModel):
     id: str = Field(..., title='Attraction id')
-    type: str = Field(..., title='My places type')
+    type: PlaceType = Field(..., title='My places type')
 
 
 class RemovePlaceRequest(BaseModel):
     id: str = Field(..., title='Attraction id')
-    type: str = Field(..., title='My places type')
+    type: PlaceType = Field(..., title='My places type')
 
 
 class GetMyPlacesRequest(BaseModel):
-    type: str = Field(..., title='My places type')
+    type: PlaceType = Field(..., title='My places type')
 
 
 class SimilarRequest(BaseModel):
@@ -39,7 +51,7 @@ class SimilarRequest(BaseModel):
     skip: int = Field(0, title='Number of items ot skip')
 
 
-class Attraction(BaseModel):
+class Place(BaseModel):
     id: str
     name: str
     rating: Optional[float]
@@ -48,6 +60,6 @@ class Attraction(BaseModel):
     description: str
 
 
-class AttractionLight(BaseModel):
+class PlaceLight(BaseModel):
     id: str
     name: str

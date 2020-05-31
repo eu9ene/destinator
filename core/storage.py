@@ -6,7 +6,7 @@ class Storage:
         raise NotImplementedError()
 
 
-class InMemoryStorage:
+class InMemoryStorage(Storage):
     def __init__(self):
         self.store = dict()
 

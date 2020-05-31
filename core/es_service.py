@@ -2,7 +2,7 @@ from typing import Dict, List
 
 from elasticsearch import Elasticsearch
 
-from api.contracts import SearchRequest, Attraction, NearbyRequest, SimilarRequest, ByIdsRequest, AttractionLight
+from core.contracts import Place, PlaceLight
 
 
 class ElasticSearchService:
@@ -10,20 +10,24 @@ class ElasticSearchService:
         self._index = index
         self._es = Elasticsearch(hosts=hosts)
 
-    def byids(self, request: ByIdsRequest):
-        body = {
-            "ids": request.ids
-        }
-
-        res = self._es.mget(index=self._index, body=body)
-        attrs = self._get_attrs(res['docs'])
+    def get_places_by_ids(self, places_ids: List[str]) -> List[Place]:
+        docs = self.get_docs_by_ids(places_ids)
+        attrs = self._get_attrs(docs)
 
         return attrs
 
-    def search(self, request: SearchRequest) -> List[AttractionLight]:
+    def get_docs_by_ids(self, docs_ids: List[str]) -> List[Dict]:
+        body = {
+            "ids": docs_ids
+        }
+
+        res = self._es.mget(index=self._index, body=body)
+        return res['docs']
+
+    def search_by_name(self, name: str, count: int, skip: int) -> List[PlaceLight]:
         query = {
-            "size": request.count,
-            "from": request.skip,
+            "size": count,
+            "from": skip,
             "query": {
                 "bool": {
                     "must": [{
@@ -33,7 +37,7 @@ class ElasticSearchService:
                     },
                         {
                             "match": {
-                                "name": request.query
+                                "name": name
                             }
                         }]
                 }
@@ -41,18 +45,15 @@ class ElasticSearchService:
         }
 
         res = self._es.search(index=self._index, body=query)
-        attrs = [AttractionLight(id=hit['_id'], name=hit["_source"]['name'])
+        attrs = [PlaceLight(id=hit['_id'], name=hit["_source"]['name'])
                  for hit in res['hits']['hits']]
 
         return attrs
 
-    def similar(self, request: SimilarRequest) -> List[Attraction]:
-        res = self._es.get(index=self._index, id=request.id)
-        emb = res['_source']['embedding']
-
+    def search_by_emb(self, emb: List[float], count: int, skip: int) -> List[Place]:
         query = {
-            "size": request.count,
-            "from": request.skip,
+            "size": count,
+            "from": skip,
             "query": {
                 "script_score": {
                     "query": {
@@ -81,12 +82,10 @@ class ElasticSearchService:
 
         return attrs
 
-    def nearby(self, request: NearbyRequest) -> List[Attraction]:
-        res = self._es.get(index=self._index, id=request.id)
-
+    def search_by_geo(self, latitude: float, longitude: float, count: int, skip: int) -> List[Place]:
         query = {
-            "size": request.count,
-            "from": request.skip,
+            "size": count,
+            "from": skip,
             "query": {
                 "bool": {
                     "must": {
@@ -99,8 +98,8 @@ class ElasticSearchService:
                             "field": "location",
                             "pivot": "1000m",
                             "origin": {
-                                "lat": res['_source']['latitude'],
-                                "lon": res['_source']['longitude']
+                                "lat": latitude,
+                                "lon": longitude
                             }
                         }
                     }
@@ -128,12 +127,12 @@ class ElasticSearchService:
         return ""
 
     def _get_attrs(self, docs):
-        attrs = [Attraction(id=hit['_id'],
-                            name=hit["_source"]['name'],
-                            rating=hit["_source"].get('rating') or None,
-                            website=hit["_source"].get('website') or "",
-                            image=self._get_photo(hit),
-                            description=hit["_source"].get('description') or "")
+        attrs = [Place(id=hit['_id'],
+                       name=hit["_source"]['name'],
+                       rating=hit["_source"].get('rating') or None,
+                       website=hit["_source"].get('website') or "",
+                       image=self._get_photo(hit),
+                       description=hit["_source"].get('description') or "")
 
                  for hit in docs]
         return attrs
