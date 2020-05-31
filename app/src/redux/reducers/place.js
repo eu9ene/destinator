@@ -1,4 +1,4 @@
-import {LOAD_PLACE_FINISHED, PLACE_IS_LOADING} from "../actionTypes";
+import {PLACE_LOAD_FINISHED, PLACE_IS_LOADING} from "../actionTypes";
 
 const initialState = {
     currentPlace: null,
@@ -13,7 +13,7 @@ export default function reducer(state = initialState, action) {
         //         ...state,
         //         currentPlace: null
         //     };
-         case LOAD_PLACE_FINISHED:
+         case PLACE_LOAD_FINISHED:
             return {
                 ...state,
                 currentPlace: action.payload.place,

@@ -1,8 +1,8 @@
-from typing import Dict
+from typing import Dict, List
 
 from elasticsearch import Elasticsearch
 
-from api.contracts import SearchRequest, Attraction, NearbyRequest, SimilarRequest, ByIdRequest
+from api.contracts import SearchRequest, Attraction, NearbyRequest, SimilarRequest, ByIdsRequest, AttractionLight
 
 
 class ElasticSearchService:
@@ -10,22 +10,17 @@ class ElasticSearchService:
         self._index = index
         self._es = Elasticsearch(hosts=hosts)
 
-    def byid(self, request: ByIdRequest):
-        query = {
-            "query": {
-                "term": {
-                    "_id": {
-                        "value": request.id
-                    }
-                }
-
-            }
+    def byids(self, request: ByIdsRequest):
+        body = {
+            "ids": request.ids
         }
 
-        attrs = self._search_attrs(query)
-        return attrs[0]
+        res = self._es.mget(index=self._index, body=body)
+        attrs = self._get_attrs(res['docs'])
 
-    def search(self, request: SearchRequest):
+        return attrs
+
+    def search(self, request: SearchRequest) -> List[AttractionLight]:
         query = {
             "size": request.count,
             "from": request.skip,
@@ -45,25 +40,15 @@ class ElasticSearchService:
             }
         }
 
-        attrs = self._search_attrs(query)
+        res = self._es.search(index=self._index, body=query)
+        attrs = [AttractionLight(id=hit['_id'], name=hit["_source"]['name'])
+                 for hit in res['hits']['hits']]
 
         return attrs
 
-    def similar(self, request: SimilarRequest):
-        query = {
-            "query": {
-                "term": {
-                    "_id": {
-                        "value": request.id
-                    }
-                }
-
-            }
-        }
-
-        res = self._es.search(index=self._index, body=query)
-
-        emb = res['hits']['hits'][0]['_source']['embedding']
+    def similar(self, request: SimilarRequest) -> List[Attraction]:
+        res = self._es.get(index=self._index, id=request.id)
+        emb = res['_source']['embedding']
 
         query = {
             "size": request.count,
@@ -91,23 +76,13 @@ class ElasticSearchService:
             }
         }
 
-        attrs = self._search_attrs(query)
+        res = self._es.search(index=self._index, body=query)
+        attrs = self._get_attrs(res['hits']['hits'])
 
         return attrs
 
-    def nearby(self, request: NearbyRequest):
-        query = {
-            "query": {
-                "term": {
-                    "_id": {
-                        "value": request.id
-                    }
-                }
-
-            }
-        }
-
-        res = self._es.search(index=self._index, body=query)
+    def nearby(self, request: NearbyRequest) -> List[Attraction]:
+        res = self._es.get(index=self._index, id=request.id)
 
         query = {
             "size": request.count,
@@ -124,16 +99,16 @@ class ElasticSearchService:
                             "field": "location",
                             "pivot": "1000m",
                             "origin": {
-                                "lat": res['hits']['hits'][0]['_source']['latitude'],
-                                "lon": res['hits']['hits'][0]['_source']['longitude']
+                                "lat": res['_source']['latitude'],
+                                "lon": res['_source']['longitude']
                             }
                         }
                     }
                 }
             }
         }
-
-        attrs = self._search_attrs(query)
+        res = self._es.search(index=self._index, body=query)
+        attrs = self._get_attrs(res['hits']['hits'])
 
         return attrs
 
@@ -152,8 +127,7 @@ class ElasticSearchService:
 
         return ""
 
-    def _search_attrs(self, query):
-        res = self._es.search(index=self._index, body=query)
+    def _get_attrs(self, docs):
         attrs = [Attraction(id=hit['_id'],
                             name=hit["_source"]['name'],
                             rating=hit["_source"].get('rating') or None,
@@ -161,5 +135,5 @@ class ElasticSearchService:
                             image=self._get_photo(hit),
                             description=hit["_source"].get('description') or "")
 
-                 for hit in res['hits']['hits']]
+                 for hit in docs]
         return attrs

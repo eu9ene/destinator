@@ -1,5 +1,9 @@
-export const getAttractions = state => {
-    return state.search.attractions;
+export const getRecs = state => {
+    return state.recs.places;
+};
+
+export const getSuggestions = state => {
+    return state.search.suggestions;
 };
 
 
@@ -15,5 +19,11 @@ export const getCurrentPlace = state => {
     };
 };
 
+
+export const getMyPlaces = (state, type) => {
+    return {
+        places: state.myPlaces.places[type]
+    };
+};
 
 

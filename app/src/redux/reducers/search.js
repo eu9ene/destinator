@@ -1,10 +1,7 @@
-import {SEARCH_FINISHED} from "../actionTypes";
-import {pageSize} from "../constants";
+import {SEARCH_FINISHED, SEARCH_LOAD_SUGGESTIONS_COMPLETED} from "../actionTypes";
 
 const initialState = {
-  suggestions: [],
-  attractions: [],
-  hasMore: false
+  suggestions: []
 };
 
 export default function reducer(state = initialState, action) {
@@ -12,10 +9,9 @@ export default function reducer(state = initialState, action) {
     case SEARCH_FINISHED:
       return {
         ...state,
-        attractions: action.payload.result,
-        hasMore: action.payload.result.length < pageSize
+        suggestions: action.payload.result
       };
-    case "loadSuggestionsComplete":
+    case SEARCH_LOAD_SUGGESTIONS_COMPLETED:
       return {
         ...state,
         suggestions: action.payload.result

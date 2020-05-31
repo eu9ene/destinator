@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel, Field
 
@@ -15,8 +15,22 @@ class NearbyRequest(BaseModel):
     skip: int = Field(0, title='Number of items ot skip')
 
 
-class ByIdRequest(BaseModel):
+class ByIdsRequest(BaseModel):
+    ids: List[str] = Field(..., title='Attraction ids')
+
+
+class AddPlaceRequest(BaseModel):
     id: str = Field(..., title='Attraction id')
+    type: str = Field(..., title='My places type')
+
+
+class RemovePlaceRequest(BaseModel):
+    id: str = Field(..., title='Attraction id')
+    type: str = Field(..., title='My places type')
+
+
+class GetMyPlacesRequest(BaseModel):
+    type: str = Field(..., title='My places type')
 
 
 class SimilarRequest(BaseModel):
@@ -32,3 +46,8 @@ class Attraction(BaseModel):
     website: Optional[str]
     image: str
     description: str
+
+
+class AttractionLight(BaseModel):
+    id: str
+    name: str
