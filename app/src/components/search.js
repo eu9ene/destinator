@@ -94,7 +94,7 @@ export function Search() {
             <TextField {...params} label="Hiking with kids in Vancouver" margin="normal"
                        variant="outlined" size="small"/>
         )}
-        getOptionLabel={(option) => option.name}
+        getOptionLabel={(option) => option != null ? option.name : ""}
 
     />
 

@@ -15,7 +15,8 @@ export const getHasMore = state => {
 export const getCurrentPlace = state => {
     return {
         place: state.place.currentPlace,
-        id: state.place.id
+        id: state.place.id,
+        similarPlaces: state.place.similarPlaces
     };
 };
 
@@ -26,9 +27,8 @@ export const getMyPlaces = (state) => {
 };
 
 export const getMyPlacesIds = (state) => {
-    return {
-        places: state.myPlaces.placesIds
-    };
+    return  state.myPlaces.placesIds;
+
 };
 
 

@@ -26,7 +26,7 @@
 //
 // function loadSuggestionsComplete(result) {
 //   return {
-//     type: "loadSuggestionsComplete",
+//     place_type: "loadSuggestionsComplete",
 //     payload: {
 //       result: result
 //     }

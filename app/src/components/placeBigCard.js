@@ -55,12 +55,6 @@ function MyPlaceAction(props) {
     </Tooltip>;
 }
 
-MyPlaceAction.propTypes = {
-    myPlaces: PropTypes.any,
-    onClick: PropTypes.func,
-    onClick1: PropTypes.func
-};
-
 export function PlaceBigCard(props) {
     const attr = props.attr;
     const myPlacesIds = props.myPlacesIds;
@@ -91,10 +85,10 @@ export function PlaceBigCard(props) {
             </CardActionArea>
 
             <CardActions>
-                <MyPlaceAction myPlacesIds={myPlacesIds} attrId={attr.id} label={"been there"} type={MyPlaceType.Been}
-                               icon={<DoneIcon/>}/>
-                <MyPlaceAction myPlacesIds={myPlacesIds} attrId={attr.id} label={"loved it"} type={MyPlaceType.Loved}
-                               icon={<FavoriteIcon/>}/>
+                <MyPlaceAction myPlacesIds={myPlacesIds} attrId={attr.id} label={"been there"}
+                               type={MyPlaceType.Been} icon={<DoneIcon/>}/>
+                <MyPlaceAction myPlacesIds={myPlacesIds} attrId={attr.id} label={"loved it"}
+                               type={MyPlaceType.Loved} icon={<FavoriteIcon/>}/>
                 <MyPlaceAction myPlacesIds={myPlacesIds} attrId={attr.id} label={"to bucket list"}
                                type={MyPlaceType.BucketList} icon={<AddIcon/>}/>
 

@@ -6,7 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import {useDispatch, useSelector} from "react-redux";
 import {getCurrentPlace, getMyPlaces, getMyPlacesIds, getPlaces, getRecs} from "../redux/selectors";
-import {findSimilarCommand, loadPlaceCommand} from "../redux/actions";
+import {findSimilarCommand, loadMyPlacesIdsAll, loadPlaceCommand} from "../redux/actions";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Typography from "@material-ui/core/Typography";
 import {PlaceBigCard} from "../components/placeBigCard";
@@ -18,7 +18,6 @@ export default function Place() {
     const history = useHistory();
 
     const place = useSelector(getCurrentPlace);
-    const places = useSelector(getRecs);
     const myPlacesIds = useSelector(getMyPlacesIds);
     let attr = place.place;
 
@@ -27,10 +26,11 @@ export default function Place() {
             attr = null;
             dispatch(loadPlaceCommand(id));
             dispatch(findSimilarCommand(id));
+            dispatch(loadMyPlacesIdsAll());
         }
     });
 
-    return (<Grid container md={12} spacing={3}>
+    return (<Grid container  spacing={3}>
             <Grid item md={1}>
                 <Button variant={"outlined"} size={'large'} color={'primary'} onClick={() => {
                     history.goBack()
@@ -48,7 +48,7 @@ export default function Place() {
                     <Typography variant="h5" component='h2'> More like this </Typography>
                 </Grid>
                 <Grid item md={12}>
-                    <PlacesGrid places={places}/>
+                    <PlacesGrid places={place.similarPlaces}/>
                 </Grid>
             </>}
 

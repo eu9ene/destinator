@@ -37,24 +37,24 @@ export default function reducer(state = initialState, action) {
         // case MYPLACES_IDS_LOAD_FINISHED:
         //     const newPlacesIds = state.placesIds;
         //     if (action.payload.result != null)
-        //         newPlacesIds[action.payload.type] = new Set(action.payload.result.map(p => p.id));
+        //         newPlacesIds[action.payload.place_type] = new Set(action.payload.result.map(p => p.id));
         //     else
-        //         newPlacesIds[action.payload.type] = new Set();
+        //         newPlacesIds[action.payload.place_type] = new Set();
         //     return {
         //         ...state,
         //         placesIds: newPlacesIds
         //     };
         // // case MYPLACES_ADD:
-        //     if (newPlaces[action.payload.type] == null)
-        //         newPlaces[action.payload.type] = new Set();
-        //     newPlaces[action.payload.type].add(action.payload.id);
+        //     if (newPlaces[action.payload.place_type] == null)
+        //         newPlaces[action.payload.place_type] = new Set();
+        //     newPlaces[action.payload.place_type].add(action.payload.id);
         //     return {
         //         ...state,
         //         places: newPlaces
         //     };
         // case MYPLACES_REMOVE:
-        //     if (newPlaces[action.payload.type] != null)
-        //         newPlaces[action.payload.type].delete(action.payload.id);
+        //     if (newPlaces[action.payload.place_type] != null)
+        //         newPlaces[action.payload.place_type].delete(action.payload.id);
         //     return {
         //         ...state,
         //         places: newPlaces

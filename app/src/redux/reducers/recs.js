@@ -2,7 +2,7 @@ import {RECS_LOAD_FINISHED} from "../actionTypes";
 import {PAGE_SIZE} from "../constants";
 
 const initialState = {
-  places: [],
+  places: null,
   geoFilter: ''
 };
 
