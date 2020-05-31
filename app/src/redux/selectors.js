@@ -19,8 +19,20 @@ export const getCurrentPlace = state => {
     };
 };
 
+export const getMyPlaces = (state) => {
+    return {
+        places: state.myPlaces.places
+    };
+};
 
-export const getMyPlaces = (state, type) => {
+export const getMyPlacesIds = (state) => {
+    return {
+        places: state.myPlaces.placesIds
+    };
+};
+
+
+export const getMyPlacesOfType = (state, type) => {
     return {
         places: state.myPlaces.places[type]
     };

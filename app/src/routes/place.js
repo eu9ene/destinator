@@ -5,7 +5,7 @@ import {useHistory} from "react-router";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import {useDispatch, useSelector} from "react-redux";
-import {getCurrentPlace, getPlaces, getRecs} from "../redux/selectors";
+import {getCurrentPlace, getMyPlaces, getMyPlacesIds, getPlaces, getRecs} from "../redux/selectors";
 import {findSimilarCommand, loadPlaceCommand} from "../redux/actions";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Typography from "@material-ui/core/Typography";
@@ -19,6 +19,7 @@ export default function Place() {
 
     const place = useSelector(getCurrentPlace);
     const places = useSelector(getRecs);
+    const myPlacesIds = useSelector(getMyPlacesIds);
     let attr = place.place;
 
     useEffect(() => {
@@ -40,14 +41,13 @@ export default function Place() {
             {attr != null &&
             <>
                 <Grid item md={11}>
-                    <PlaceBigCard attr={attr}/>
+                    <PlaceBigCard attr={attr} myPlacesIds={myPlacesIds}/>
 
                 </Grid>
                 <Grid item md={12}>
                     <Typography variant="h5" component='h2'> More like this </Typography>
                 </Grid>
                 <Grid item md={12}>
-
                     <PlacesGrid places={places}/>
                 </Grid>
             </>}

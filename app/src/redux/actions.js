@@ -4,7 +4,7 @@ import {
     SEARCH_FINISHED,
     MYPLACES_ADD,
     MYPLACES_REMOVE,
-    MYPLACES_LOAD_FINISHED, SEARCH_LOAD_SUGGESTIONS_COMPLETED, RECS_LOAD_FINISHED
+    MYPLACES_LOAD_FINISHED, SEARCH_LOAD_SUGGESTIONS_COMPLETED, RECS_LOAD_FINISHED, MYPLACES_IDS_LOAD_FINISHED
 } from "./actionTypes";
 import {PAGE_SIZE} from "./constants";
 
@@ -133,6 +133,13 @@ export function loadMyPlaces(type) {
                     result: res
                 }
             }));
+            // .then(res => dispatch({
+            //     type: MYPLACES_IDS_LOAD_FINISHED,
+            //     payload: {
+            //         type: type,
+            //         result: res
+            //     }
+            // }));
     }
 }
 

@@ -9,7 +9,7 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import {useDispatch, useSelector} from "react-redux";
 import {getCurrentPlace} from "../redux/selectors";
-import {addPlace, findSimilarCommand, loadPlaceCommand} from "../redux/actions";
+import {addPlace, findSimilarCommand, loadPlaceCommand, removePlace} from "../redux/actions";
 import Rating from "@material-ui/lab/Rating";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Typography from "@material-ui/core/Typography";
@@ -27,6 +27,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import DoneIcon from '@material-ui/icons/Done';
 import {MyPlaceType} from "../redux/constants";
+import * as PropTypes from "prop-types";
 
 
 const mediaStyles = makeStyles((theme) => ({
@@ -37,8 +38,32 @@ const mediaStyles = makeStyles((theme) => ({
 }));
 
 
+function MyPlaceAction(props) {
+    const dispatch = useDispatch();
+    return <Tooltip title={props.label} aria-label={props.label}>
+        {props.myPlacesIds[props.type] != null && props.myPlacesIds[props.type].has(props.attrId)
+            ? <IconButton aria-label={props.label}
+                          color="secondary"
+                          onClick={() => dispatch(removePlace(props.attrId, props.type))}>
+                {props.icon}
+            </IconButton>
+            : < IconButton aria-label={props.label}
+                           onClick={() => dispatch(addPlace(props.attrId, props.type))}>
+                {props.icon}
+            </IconButton>
+        }
+    </Tooltip>;
+}
+
+MyPlaceAction.propTypes = {
+    myPlaces: PropTypes.any,
+    onClick: PropTypes.func,
+    onClick1: PropTypes.func
+};
+
 export function PlaceBigCard(props) {
     const attr = props.attr;
+    const myPlacesIds = props.myPlacesIds;
     const dispatch = useDispatch();
     const classes = mediaStyles();
     // const history = useHistory();
@@ -66,25 +91,12 @@ export function PlaceBigCard(props) {
             </CardActionArea>
 
             <CardActions>
-                <Tooltip title="been there" aria-label="been there">
-                    <IconButton aria-label="been there"
-                                onClick={() => dispatch(addPlace(attr.id, MyPlaceType.Been))}>
-                        <DoneIcon/>
-                    </IconButton>
-                </Tooltip>
-                <Tooltip title="loved it" aria-label="loved it">
-                    <IconButton aria-label="loved it"
-                                onClick={() => dispatch(addPlace(attr.id, MyPlaceType.Loved))}>
-                        <FavoriteIcon/>
-                    </IconButton>
-                </Tooltip>
-
-                <Tooltip title="to bucket list" aria-label="to bucket list">
-                    <IconButton aria-label="to bucket list"
-                                onClick={() => dispatch(addPlace(attr.id, MyPlaceType.BucketList))}>
-                        <AddIcon/>
-                    </IconButton>
-                </Tooltip>
+                <MyPlaceAction myPlacesIds={myPlacesIds} attrId={attr.id} label={"been there"} type={MyPlaceType.Been}
+                               icon={<DoneIcon/>}/>
+                <MyPlaceAction myPlacesIds={myPlacesIds} attrId={attr.id} label={"loved it"} type={MyPlaceType.Loved}
+                               icon={<FavoriteIcon/>}/>
+                <MyPlaceAction myPlacesIds={myPlacesIds} attrId={attr.id} label={"to bucket list"}
+                               type={MyPlaceType.BucketList} icon={<AddIcon/>}/>
 
                 <Button size="small" color="primary" onClick={() => {
                     if (attr.website != null)

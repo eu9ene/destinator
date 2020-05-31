@@ -1,26 +1,23 @@
 import Grid from "@material-ui/core/Grid";
 import React, {useEffect} from "react";
 import {PlacesList} from "../components/placesList";
-import Typography from "@material-ui/core/Typography";
 import {useDispatch, useSelector} from "react-redux";
-import {getMyPlaces} from "../redux/selectors";
+import {getMyPlacesOfType} from "../redux/selectors";
 import {loadMyPlaces} from "../redux/actions";
 import {MyPlaceType} from "../redux/constants";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import TabPanel from "@material-ui/lab/TabPanel";
-import {PlacesGrid} from "../components/placesGrid";
 
 function MyPlacesOfType(props) {
     const type = props.type;
     const dispatch = useDispatch();
-    const places = useSelector(state => getMyPlaces(state, type)).places;
+    const places = useSelector(state => getMyPlacesOfType(state, type)).places;
 
     useEffect(() => {
         if (places == null)
             dispatch(loadMyPlaces(type));
     });
-    return <PlacesGrid places={places}/>
+    return <PlacesList places={places}/>
 }
 
 
@@ -46,8 +43,6 @@ export default function MyPlaces() {
         </Grid>
         <Grid item xs={12}>
             <MyPlacesOfType type={value}/>
-
         </Grid>
-
     </Grid>
 }

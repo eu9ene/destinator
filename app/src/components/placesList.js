@@ -12,9 +12,9 @@ const attrStyles = makeStyles((theme) => ({
         // minWidth: '80px'
     },
     gridList: {
-    flexWrap: 'nowrap',
+    // flexWrap: 'nowrap',
     // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-    transform: 'translateZ(0)',
+    // transform: 'translateZ(0)',
   },
 }));
 
@@ -25,11 +25,11 @@ export function PlacesList(props) {
     // const hasMore = useSelector(getHasMore);
     const places = props.places;
 
-    return <GridList  className={classes.gridList} cols={3.5}>
+    return <Grid  container className={classes.gridList} spacing={3}>
         {places != null && [...places].map((attr, index) => (
             <Grid key={attr.id} item md={3} style={{order: index}} className={classes.item}>
                 <ImgMediaCard  attr={attr}/>
             </Grid>))}
-    </GridList>
+    </Grid>
 
 }
