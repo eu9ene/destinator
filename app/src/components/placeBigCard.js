@@ -1,33 +1,15 @@
-import React, {useEffect} from "react";
-import {
-
-    useParams
-} from "react-router-dom";
-import {PlacesGrid} from "./placesGrid";
-import {useHistory} from "react-router";
-import Grid from "@material-ui/core/Grid";
+import React from "react";
 import Button from "@material-ui/core/Button";
-import {useDispatch, useSelector} from "react-redux";
-import {getCurrentPlace} from "../redux/selectors";
-import {addPlace, findSimilarCommand, loadPlaceCommand, removePlace} from "../redux/actions";
+import {useDispatch} from "react-redux";
 import Rating from "@material-ui/lab/Rating";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Typography from "@material-ui/core/Typography";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import Fab from "@material-ui/core/Fab";
-import AddIcon from '@material-ui/icons/Add';
-import ShareIcon from '@material-ui/icons/Share';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import CardActions from "@material-ui/core/CardActions";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
-import DoneIcon from '@material-ui/icons/Done';
-import {MyPlaceType} from "../redux/constants";
-import * as PropTypes from "prop-types";
+import {MyPlaceActions} from "./myPlaceActions";
 
 
 const mediaStyles = makeStyles((theme) => ({
@@ -38,33 +20,15 @@ const mediaStyles = makeStyles((theme) => ({
 }));
 
 
-function MyPlaceAction(props) {
-    const dispatch = useDispatch();
-    return <Tooltip title={props.label} aria-label={props.label}>
-        {props.myPlacesIds[props.type] != null && props.myPlacesIds[props.type].has(props.attrId)
-            ? <IconButton aria-label={props.label}
-                          color="secondary"
-                          onClick={() => dispatch(removePlace(props.attrId, props.type))}>
-                {props.icon}
-            </IconButton>
-            : < IconButton aria-label={props.label}
-                           onClick={() => dispatch(addPlace(props.attrId, props.type))}>
-                {props.icon}
-            </IconButton>
-        }
-    </Tooltip>;
-}
-
 export function PlaceBigCard(props) {
     const attr = props.attr;
-    const myPlacesIds = props.myPlacesIds;
     const dispatch = useDispatch();
     const classes = mediaStyles();
     // const history = useHistory();
 
     return (
         <Card>
-            <CardActionArea>
+
                 {attr.image &&
                 <CardMedia
                     component="img"
@@ -82,16 +46,10 @@ export function PlaceBigCard(props) {
                         {attr.description}
                     </Typography>
                 </CardContent>
-            </CardActionArea>
+
 
             <CardActions>
-                <MyPlaceAction myPlacesIds={myPlacesIds} attrId={attr.id} label={"been there"}
-                               type={MyPlaceType.Been} icon={<DoneIcon/>}/>
-                <MyPlaceAction myPlacesIds={myPlacesIds} attrId={attr.id} label={"loved it"}
-                               type={MyPlaceType.Loved} icon={<FavoriteIcon/>}/>
-                <MyPlaceAction myPlacesIds={myPlacesIds} attrId={attr.id} label={"to bucket list"}
-                               type={MyPlaceType.BucketList} icon={<AddIcon/>}/>
-
+                <MyPlaceActions  attrId={attr.id}/>
                 <Button size="small" color="primary" onClick={() => {
                     if (attr.website != null)
                         window.open(attr.website);

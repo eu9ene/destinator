@@ -7,6 +7,10 @@ import {loadMyPlaces} from "../redux/actions";
 import {MyPlaceType} from "../redux/constants";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
+import {makeStyles} from "@material-ui/core/styles";
+import AddIcon from '@material-ui/icons/Add';
+import DoneIcon from '@material-ui/icons/Done';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 
 function MyPlacesOfType(props) {
     const type = props.type;
@@ -21,8 +25,17 @@ function MyPlacesOfType(props) {
 }
 
 
+const getStyles = makeStyles((theme) => ({
+    tabs: {
+        // fixed: true
+    }
+}));
+
+
 export default function MyPlaces() {
-    const [value, setValue] = React.useState(MyPlaceType.BucketList);
+    const [value, setValue] = React.useState(MyPlaceType.Loved);
+
+    const classes = getStyles();
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -35,9 +48,10 @@ export default function MyPlaces() {
                   textColor="primary"
                   onChange={handleChange}
                   aria-label="my-places-selector"
-                  centered>
-                <Tab label="Bucket list" value={MyPlaceType.BucketList}/>
+                  centered
+                  className={classes.tabs}>
                 <Tab label="Favorite" value={MyPlaceType.Loved}/>
+                <Tab label="Bucket list"  value={MyPlaceType.BucketList}/>
                 <Tab label="Visited" value={MyPlaceType.Been}/>
             </Tabs>
         </Grid>

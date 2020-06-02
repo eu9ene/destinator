@@ -2,9 +2,7 @@ import {fade, makeStyles} from "@material-ui/core/styles";
 import {useDispatch, useSelector} from "react-redux";
 
 import React, {useState} from "react";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
-import {findNearbyCommand, findSimilarCommand, searchCommand} from "../redux/actions";
+import { searchCommand} from "../redux/actions";
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from "@material-ui/core/InputBase";
 import {useHistory} from "react-router";
@@ -22,10 +20,10 @@ const searchStyles = makeStyles((theme) => ({
     search: {
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
-        // backgroundColor: fade(theme.palette.common.white, 0.15),
-        // '&:hover': {
-        //   backgroundColor: fade(theme.palette.common.white, 0.25),
-        // },
+        backgroundColor: theme.palette.action.hover,
+        '&:hover': {
+            backgroundColor: fade(theme.palette.background.default, 0.25),
+        },
 
         marginRight: theme.spacing(2),
         marginLeft: 0,
@@ -44,9 +42,9 @@ const searchStyles = makeStyles((theme) => ({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    // inputRoot: {
-    //   color: 'inherit',
-    // },
+    inputRoot: {
+        color: 'default',
+    },
     inputInput: {
         padding: theme.spacing(1, 1, 1, 0),
         // vertical padding + font size from searchIcon
@@ -77,6 +75,8 @@ export function Search() {
         id="places-search"
         value={selectedValue}
         onChange={(event, newValue) => {
+            if (newValue == null || newValue.id == null)
+                return;
             setSelectedValue('');
             setInputValue('');
             history.push(`/place/${newValue.id}`);
@@ -87,48 +87,29 @@ export function Search() {
             setInputValue(newInputValue);
             dispatch(searchCommand(newInputValue, history))
         }}
-        fullWidth
+        // fullWidth
         freeSolo
         options={suggestions}
         renderInput={(params) => (
-            <TextField {...params} label="Hiking with kids in Vancouver" margin="normal"
-                       variant="outlined" size="small"/>
+            // <TextField {...params} label="Search" margin="normal"
+            //            variant="outlined" size="small"/>
+            <div className={classes.search} ref={params.InputProps.ref}>
+                <div className={classes.searchIcon}>
+                    <SearchIcon/>
+                </div>
+                <InputBase {...params.inputProps}
+                           placeholder="Search…"
+                           classes={{
+                               root: classes.inputRoot,
+                               input: classes.inputInput,
+                           }}
+                           inputProps={{'aria-label': 'search'}}
+                />
+            </div>
         )}
         getOptionLabel={(option) => option != null ? option.name : ""}
 
     />
 
-
-    // <div className={classes.search}>
-    //         <div className={classes.searchIcon}>
-    //           <SearchIcon />
-    //         </div>
-    //         <InputBase
-    //           placeholder="Search…"
-    //           classes={{
-    //             root: classes.inputRoot,
-    //             input: classes.inputInput,
-    //           }}
-    //           selectedValue={input}
-    //            onChange={e => setInput(e.target.selectedValue)}
-    //                     onKeyDown={onKeyDown}
-    //           inputProps={{ 'aria-label': 'search' }}
-    //         />
-    //       </div>
-
-
-    // <Grid container xs={12} spacing={3} className={classes.grid}>
-    //     <Grid item xs={12} className={classes.gridText}>
-    //         <TextField id="outlined-basic"
-    //             // label="What are you looking for?"
-    //                    variant="outlined"
-    //                    size="small"
-    //                    selectedValue={input} fullWidth
-    //                    onChange={e => setInput(e.target.selectedValue)}
-    //                    onKeyDown={onKeyDown}
-    //         />
-    //     </Grid>
-    //
-    // </Grid>
 
 }

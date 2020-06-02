@@ -3,7 +3,8 @@ import React, {useEffect} from "react";
 import {PlacesGrid} from "../components/placesGrid";
 import {useDispatch, useSelector} from "react-redux";
 import {getRecs} from "../redux/selectors";
-import {recommendCommand} from "../redux/actions";
+import {loadMyPlacesIdsAll, recommendCommand} from "../redux/actions";
+import {PlacesList} from "../components/placesList";
 
 
 export default function Home() {
@@ -13,12 +14,13 @@ export default function Home() {
     useEffect(() => {
         if (places == null) {
             dispatch(recommendCommand());
+                        dispatch(loadMyPlacesIdsAll());
         }
     });
 
     return <Grid container spacing={3}>
         <Grid item xs={12}>
-            <PlacesGrid places={places}/>
+            <PlacesList places={places}/>
         </Grid>
     </Grid>
 }

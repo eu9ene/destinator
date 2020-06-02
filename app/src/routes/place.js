@@ -10,15 +10,14 @@ import {findSimilarCommand, loadMyPlacesIdsAll, loadPlaceCommand} from "../redux
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Typography from "@material-ui/core/Typography";
 import {PlaceBigCard} from "../components/placeBigCard";
+import {PlacesList} from "../components/placesList";
 
 
 export default function Place() {
     const {id} = useParams();
     const dispatch = useDispatch();
     const history = useHistory();
-
     const place = useSelector(getCurrentPlace);
-    const myPlacesIds = useSelector(getMyPlacesIds);
     let attr = place.place;
 
     useEffect(() => {
@@ -26,29 +25,27 @@ export default function Place() {
             attr = null;
             dispatch(loadPlaceCommand(id));
             dispatch(findSimilarCommand(id));
-            dispatch(loadMyPlacesIdsAll());
         }
     });
 
-    return (<Grid container  spacing={3}>
-            <Grid item md={1}>
-                <Button variant={"outlined"} size={'large'} color={'primary'} onClick={() => {
-                    history.goBack()
-                }}>Back</Button>
-            </Grid>
+    return (<Grid container spacing={3}>
+            {/*<Grid item md={1}>*/}
+            {/*    <Button variant={"outlined"} size={'large'} color={'primary'} onClick={() => {*/}
+            {/*        history.goBack()*/}
+            {/*    }}>Back</Button>*/}
+            {/*</Grid>*/}
 
             {attr == null && <CircularProgress/>}
             {attr != null &&
             <>
-                <Grid item md={11}>
-                    <PlaceBigCard attr={attr} myPlacesIds={myPlacesIds}/>
-
+                <Grid item md={12}>
+                    <PlaceBigCard attr={attr}/>
                 </Grid>
                 <Grid item md={12}>
                     <Typography variant="h5" component='h2'> More like this </Typography>
                 </Grid>
                 <Grid item md={12}>
-                    <PlacesGrid places={place.similarPlaces}/>
+                    <PlacesList places={place.similarPlaces}/>
                 </Grid>
             </>}
 

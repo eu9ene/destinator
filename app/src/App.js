@@ -4,23 +4,19 @@ import {Provider} from "react-redux";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import {Search} from "./components/search";
 import configureStore, {history} from "./redux/store";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import {ThemeProvider, createMuiTheme} from "@material-ui/core/styles";
 import ScrollToTop from "./components/scroll";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
 import {ConnectedRouter} from 'connected-react-router'
-import {Switch, Route} from "react-router"
-import Button from "@material-ui/core/Button";
-import Place from "./routes/place";
-
+import {Switch, Route} from "react-router-dom";
+import {AppHeader} from "./components/header";
+import Redirect from "react-router-dom/es/Redirect";
 
 
 const Home = lazy(() => import('./routes/home'));
-// const Place = lazy(() => import('./routes/place'));
+const Place = lazy(() => import('./routes/place'));
 const MyPlaces = lazy(() => import('./routes/myplaces'));
 
 const themeX = createMuiTheme({
@@ -33,9 +29,6 @@ const themeX = createMuiTheme({
 const useStyles = makeStyles((theme) => ({
     main: {
         marginTop: '80px'
-    },
-    menuButton: {
-        marginRight: theme.spacing(2),
     }
 }));
 
@@ -51,7 +44,6 @@ function App() {
             <ConnectedRouter history={history}>
                 <ScrollToTop/>
                 <ThemeProvider theme={themeX}>
-
                     <div className="App">
                         <header>
                             <meta
@@ -63,38 +55,24 @@ function App() {
                             <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
                         </header>
                         <CssBaseline/>
-                        <AppBar
-                            position="fixed"
-                            color="inherit">
-                            <Toolbar>
-                                <Button variant="outlined" className={classes.menuButton}
-                                        onClick={() => {
-                                            history.push('/')
-                                        }}>Home</Button>
-                                <Button variant="outlined" className={classes.menuButton}
-                                onClick={() => {
-                                            history.push('/myplaces')
-                                        }}>
-                                    MyPlaces</Button>
-                                <Search/>
-
-                            </Toolbar>
-                        </AppBar>
+                        <AppHeader/>
                         <Container maxWidth="lg" className={classes.main}>
                             <Grid container>
                                 <Grid item xs={12}>
                                     <Suspense fallback={<CircularProgress/>}>
                                         <Switch>
-                                            <Route exact path='/' component={Home}/>
-                                            <Route path='/myplaces' component={MyPlaces}/>
-                                            <Route path={`/place/:id`} component={Place}/>
+                                            <Route exact path='/myplaces' component={MyPlaces}/>
+                                            <Route exact path={`/place/:id`} component={Place}/>
+                                            <Route exact path='/home' component={Home}/>
+                                            <Route exact path="/">
+                                                <Redirect to="/home"/>
+                                            </Route>
                                         </Switch>
                                     </Suspense>
                                 </Grid>
                             </Grid>
                         </Container>
                     </div>
-
                 </ThemeProvider>
             </ConnectedRouter>
         </Provider>

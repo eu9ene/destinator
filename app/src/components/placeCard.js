@@ -7,6 +7,8 @@ import Typography from "@material-ui/core/Typography";
 
 import React from "react";
 import {useHistory} from 'react-router';
+import {MyPlaceActions} from "./myPlaceActions";
+import CardActions from "@material-ui/core/CardActions";
 
 const mediaStyles = makeStyles((theme) => ({
     img: {
@@ -21,7 +23,7 @@ export function ImgMediaCard(props) {
     const history = useHistory();
 
     return (
-        <Card>
+        <Card >
             <CardActionArea onClick={() => history.push(`/place/${attr.id}`)}>
                 {attr.image &&
                 <CardMedia
@@ -39,7 +41,11 @@ export function ImgMediaCard(props) {
                         {attr.description.substring(0, Math.min(attr.description.length, 200))}
                     </Typography>
                 </CardContent>
+
             </CardActionArea>
+            <CardActions disableSpacing>
+                <MyPlaceActions attrId={attr.id}/>
+            </CardActions>
         </Card>
     );
 }
