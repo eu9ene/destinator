@@ -56,8 +56,8 @@ class Place(BaseModel):
     name: str
     rating: Optional[float]
     website: Optional[str]
-    imageMedium: str
-    imageLarge: str
+    imageMedium: Optional[str]
+    imageLarge: Optional[str]
     description: str
     latitude: float
     longitude: float
