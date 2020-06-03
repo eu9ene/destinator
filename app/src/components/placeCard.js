@@ -17,7 +17,7 @@ const mediaStyles = makeStyles((theme) => ({
 }));
 
 
-export function ImgMediaCard(props) {
+export const ImgMediaCard = (props) =>{
     const attr = props.attr;
     const classes = mediaStyles();
     const history = useHistory();
@@ -25,11 +25,11 @@ export function ImgMediaCard(props) {
     return (
         <Card >
             <CardActionArea onClick={() => history.push(`/place/${attr.id}`)}>
-                {attr.image &&
+                {attr.imageMedium &&
                 <CardMedia
                     component="img"
                     alt={attr.name}
-                    image={attr.image}
+                    image={attr.imageMedium}
                     title={attr.name}
                     className={classes.img}
                 />}
@@ -48,4 +48,4 @@ export function ImgMediaCard(props) {
             </CardActions>
         </Card>
     );
-}
+};

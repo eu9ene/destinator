@@ -1,10 +1,10 @@
 import Grid from "@material-ui/core/Grid";
 import React, {useEffect} from "react";
-import {PlacesGrid} from "../components/placesGrid";
 import {useDispatch, useSelector} from "react-redux";
 import {getRecs} from "../redux/selectors";
 import {loadMyPlacesIdsAll, recommendCommand} from "../redux/actions";
 import {PlacesList} from "../components/placesList";
+import {SimpleMap} from "../components/map";
 
 
 export default function Home() {
@@ -19,8 +19,11 @@ export default function Home() {
     });
 
     return <Grid container spacing={3}>
-        <Grid item xs={12}>
+        <Grid item md={7}>
             <PlacesList places={places}/>
+        </Grid>
+        <Grid item md={5} >
+                <SimpleMap places={places}/>
         </Grid>
     </Grid>
 }

@@ -2,7 +2,6 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import Grid from "@material-ui/core/Grid";
 import React from "react";
 import {ImgMediaCard} from "./placeCard";
-import GridList from "@material-ui/core/GridList";
 
 
 const attrStyles = makeStyles((theme) => ({
@@ -18,18 +17,15 @@ const attrStyles = makeStyles((theme) => ({
   },
 }));
 
-export function PlacesList(props) {
-    // const attractions = useSelector(getAttractions);
+export const PlacesList= (props) =>{
     const classes = attrStyles();
-    // const dispatch = useDispatch();
-    // const hasMore = useSelector(getHasMore);
     const places = props.places;
 
     return <Grid  container className={classes.gridList} spacing={3}>
         {places != null && [...places].map((attr, index) => (
-            <Grid key={attr.id} item md={3} style={{order: index}} className={classes.item}>
+            <Grid key={attr.id} item md={4} style={{order: index}} className={classes.item}>
                 <ImgMediaCard  attr={attr}/>
             </Grid>))}
     </Grid>
 
-}
+};

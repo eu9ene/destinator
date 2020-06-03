@@ -1,17 +1,21 @@
 import React, {useEffect} from "react";
 import {useParams} from "react-router-dom";
-import {PlacesGrid} from "../components/placesGrid";
 import {useHistory} from "react-router";
 import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
 import {useDispatch, useSelector} from "react-redux";
-import {getCurrentPlace, getMyPlaces, getMyPlacesIds, getPlaces, getRecs} from "../redux/selectors";
-import {findSimilarCommand, loadMyPlacesIdsAll, loadPlaceCommand} from "../redux/actions";
+import {getCurrentPlace} from "../redux/selectors";
+import {findSimilarCommand, loadPlaceCommand} from "../redux/actions";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Typography from "@material-ui/core/Typography";
 import {PlaceBigCard} from "../components/placeBigCard";
 import {PlacesList} from "../components/placesList";
+import {SimpleMap} from "../components/map";
+import {makeStyles} from "@material-ui/core/styles";
 
+
+const getStyles = makeStyles((theme) => ({
+    map: {}
+}));
 
 export default function Place() {
     const {id} = useParams();
@@ -19,6 +23,10 @@ export default function Place() {
     const history = useHistory();
     const place = useSelector(getCurrentPlace);
     let attr = place.place;
+
+    const mapPlaces = place.similarPlaces != null && attr != null ? [attr].concat(place.similarPlaces) : [];
+
+    const classes = getStyles();
 
     useEffect(() => {
         if (attr == null || id !== place.id) {
@@ -28,28 +36,35 @@ export default function Place() {
         }
     });
 
-    return (<Grid container spacing={3}>
-            {/*<Grid item md={1}>*/}
-            {/*    <Button variant={"outlined"} size={'large'} color={'primary'} onClick={() => {*/}
-            {/*        history.goBack()*/}
-            {/*    }}>Back</Button>*/}
-            {/*</Grid>*/}
+    //     {/*<Grid item md={1}>*/}
+    // {/*    <Button variant={"outlined"} size={'large'} color={'primary'} onClick={() => {*/}
+    // {/*        history.goBack()*/}
+    // {/*    }}>Back</Button>*/}
+    // {/*</Grid>*/}
 
+    return (<>
             {attr == null && <CircularProgress/>}
-            {attr != null &&
-            <>
-                <Grid item md={12}>
-                    <PlaceBigCard attr={attr}/>
+            {attr != null && <Grid container spacing={3}>
+                <Grid item md={7}>
+                    <Grid container spacing={3}>
+                        <Grid item md={12}>
+                            <PlaceBigCard attr={attr}/>
+                        </Grid>
+                        <Grid item md={12}>
+                            <Typography variant="h5" component='h2'> More like this </Typography>
+                        </Grid>
+                        <Grid item md={12}>
+                            <PlacesList places={place.similarPlaces}/>
+                        </Grid>
+                    </Grid>
                 </Grid>
-                <Grid item md={12}>
-                    <Typography variant="h5" component='h2'> More like this </Typography>
+                <Grid item md={5}>
+                    <SimpleMap places={mapPlaces}/>
                 </Grid>
-                <Grid item md={12}>
-                    <PlacesList places={place.similarPlaces}/>
-                </Grid>
-            </>}
+            </Grid>
+            }
 
-        </Grid>
+        </>
 
     );
 }

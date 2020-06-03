@@ -57,18 +57,13 @@ const searchStyles = makeStyles((theme) => ({
     },
 }));
 
-export function Search() {
+export const Search = () => {
     const dispatch = useDispatch();
     const history = useHistory();
-    const suggestions = useSelector(getSuggestions)
+    const suggestions = useSelector(getSuggestions);
 
     const [selectedValue, setSelectedValue] = useState('');
     const [inputValue, setInputValue] = useState('');
-    // const onKeyDown = (e) => {
-    //     if (e.key === 'Enter') {
-    //         dispatch(searchCommand(selectedValue, history));
-    //     }
-    // };
     const classes = searchStyles();
 
     return <Autocomplete
@@ -91,8 +86,6 @@ export function Search() {
         freeSolo
         options={suggestions}
         renderInput={(params) => (
-            // <TextField {...params} label="Search" margin="normal"
-            //            variant="outlined" size="small"/>
             <div className={classes.search} ref={params.InputProps.ref}>
                 <div className={classes.searchIcon}>
                     <SearchIcon/>
@@ -112,4 +105,4 @@ export function Search() {
     />
 
 
-}
+};

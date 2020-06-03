@@ -124,27 +124,30 @@ class ElasticSearchService:
         return attrs
 
     @staticmethod
-    def _get_photo(hit):
+    def _get_photo(hit, size):
         if 'photo' not in hit['_source'] or not hit['_source']['photo']:
-            return ""
-
+            return "", ""
         if 'images' not in hit['_source']['photo']:
-            return ""
+            return "", ""
 
         photos = hit['_source']['photo']['images']
+        if size not in photos:
+            return ''
 
-        if "medium" in photos:
-            return photos['medium']['url']
-
-        return ""
+        return photos[size]['url']
 
     def _get_attrs(self, docs: List[Dict]) -> List[Place]:
         attrs = [Place(id=hit['_id'],
                        name=hit["_source"]['name'],
                        rating=hit["_source"].get('rating') or None,
                        website=hit["_source"].get('website') or "",
-                       image=self._get_photo(hit),
-                       description=hit["_source"].get('description') or "")
+                       imageMedium=self._get_photo(hit, 'medium'),
+                       imageLarge=self._get_photo(hit, 'large'),
+                       description=hit["_source"].get('description') or "",
+                       latitude=hit["_source"]['latitude'],
+                       longitude=hit["_source"]['longitude'],
+                       tripadvisorUrl=hit["_source"].get('web_url', ""),
+                       numReviews=hit["_source"]['num_reviews'])
 
                  for hit in docs]
         return attrs

@@ -56,8 +56,13 @@ class Place(BaseModel):
     name: str
     rating: Optional[float]
     website: Optional[str]
-    image: str
+    imageMedium: str
+    imageLarge: str
     description: str
+    latitude: float
+    longitude: float
+    tripadvisorUrl: str
+    numReviews: int
 
 
 class PlaceLight(BaseModel):

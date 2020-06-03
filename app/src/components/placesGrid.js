@@ -1,6 +1,4 @@
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import {useDispatch, useSelector} from "react-redux";
-import {getPlaces, getHasMore} from "../redux/selectors";
 import Grid from "@material-ui/core/Grid";
 import React from "react";
 import {ImgMediaCard} from "./placeCard";
@@ -24,11 +22,8 @@ const attrStyles = makeStyles((theme) => ({
     }
 }));
 
-export function PlacesGrid(props) {
-    // const attractions = useSelector(getAttractions);
+export const PlacesGrid= (props) => {
     const classes = attrStyles();
-    // const dispatch = useDispatch();
-    // const hasMore = useSelector(getHasMore);
     const places = props.places;
 
     return <Grid container className={classes.grid} spacing={3}>
@@ -38,4 +33,4 @@ export function PlacesGrid(props) {
             </Grid>))}
     </Grid>
 
-}
+};

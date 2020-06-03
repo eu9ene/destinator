@@ -24,7 +24,7 @@ export function AppHeader() {
     const isMyPlaces = useRouteMatch("/myplaces");
 
     return <AppBar
-        position="fixed"
+        position="sticky"
         color="inherit">
         <Toolbar>
             <Button variant="text" color={isHome ? 'primary' : 'default'} className={classes.menuButton}

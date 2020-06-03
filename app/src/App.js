@@ -12,7 +12,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import {ConnectedRouter} from 'connected-react-router'
 import {Switch, Route} from "react-router-dom";
 import {AppHeader} from "./components/header";
-import Redirect from "react-router-dom/es/Redirect";
+import {Redirect} from "react-router-dom";
 
 
 const Home = lazy(() => import('./routes/home'));
@@ -28,7 +28,7 @@ const themeX = createMuiTheme({
 
 const useStyles = makeStyles((theme) => ({
     main: {
-        marginTop: '80px'
+        marginTop: theme.spacing(2)
     }
 }));
 
@@ -56,7 +56,7 @@ function App() {
                         </header>
                         <CssBaseline/>
                         <AppHeader/>
-                        <Container maxWidth="lg" className={classes.main}>
+                        <Container maxWidth="xl" className={classes.main}>
                             <Grid container>
                                 <Grid item xs={12}>
                                     <Suspense fallback={<CircularProgress/>}>

@@ -10,7 +10,7 @@ import {getMyPlacesIds} from "../redux/selectors";
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 
 
-function MyPlaceAction(props) {
+const MyPlaceAction = React.memo((props) => {
     const dispatch = useDispatch();
     return <Tooltip title={props.label} aria-label={props.label}>
         {props.myPlacesIds[props.type] != null && props.myPlacesIds[props.type].has(props.attrId)
@@ -25,7 +25,7 @@ function MyPlaceAction(props) {
             </IconButton>
         }
     </Tooltip>;
-}
+});
 
 export function MyPlaceActions(props) {
     const myPlacesIds = useSelector(getMyPlacesIds);
