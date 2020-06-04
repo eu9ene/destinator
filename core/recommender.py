@@ -24,7 +24,8 @@ class Recommender:
         been_ids = self._my_places.my_places_ids(GetMyPlacesRequest(type=PlaceType.been))
 
         return self._es_service.search_by_emb(mean_emb, exclude=loved_ids+been_ids,
-                                              count=request.count, skip=request.skip)
+                                              count=request.count, skip=request.skip,
+                                              geo_bounds=request.geoBounds)
 
     def similar(self, request: SimilarRequest) -> List[Place]:
         res = self._es_service.get_doc_by_id(request.id)

@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 from pydantic import BaseModel, Field
 
@@ -25,6 +25,7 @@ class NearbyRequest(BaseModel):
 class PersonalRequest(BaseModel):
     count: int = Field(..., title='Number of items')
     skip: int = Field(0, title='Number of items ot skip')
+    geoBounds: Optional[Dict[str, Dict[str, float]]] = Field(..., title='Geo bounds')
 
 
 class ByIdsRequest(BaseModel):

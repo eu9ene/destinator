@@ -1,6 +1,5 @@
 import React, {useEffect} from "react";
 import {useParams} from "react-router-dom";
-import {useHistory} from "react-router";
 import Grid from "@material-ui/core/Grid";
 import {useDispatch, useSelector} from "react-redux";
 import {getCurrentPlace} from "../redux/selectors";
@@ -10,27 +9,19 @@ import Typography from "@material-ui/core/Typography";
 import {PlaceBigCard} from "../components/placeBigCard";
 import {PlacesList} from "../components/placesList";
 import {SimpleMap} from "../components/map";
-import {makeStyles} from "@material-ui/core/styles";
 
-
-const getStyles = makeStyles((theme) => ({
-    map: {}
-}));
 
 export default function Place() {
     const {id} = useParams();
     const dispatch = useDispatch();
-    const history = useHistory();
     const place = useSelector(getCurrentPlace);
-    let attr = place.place;
+    const attr = place.place;
 
     const mapPlaces = place.similarPlaces != null && attr != null ? [attr].concat(place.similarPlaces) : [];
 
-    const classes = getStyles();
 
     useEffect(() => {
         if (attr == null || id !== place.id) {
-            attr = null;
             dispatch(loadPlaceCommand(id));
             dispatch(findSimilarCommand(id));
         }

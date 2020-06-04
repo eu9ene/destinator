@@ -18,12 +18,18 @@ export default function Home() {
         }
     });
 
+    const handleOnBoundsChange = (bounds) => {
+
+        dispatch(recommendCommand(bounds));
+
+    };
+
     return <Grid container spacing={3}>
         <Grid item md={7}>
             <PlacesList places={places}/>
         </Grid>
         <Grid item md={5} >
-                <SimpleMap places={places}/>
+                <SimpleMap places={places} handleOnBoundsChange={handleOnBoundsChange}/>
         </Grid>
     </Grid>
 }

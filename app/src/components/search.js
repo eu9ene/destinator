@@ -100,7 +100,7 @@ export const Search = () => {
                 />
             </div>
         )}
-        getOptionLabel={(option) => option != null ? option.name : ""}
+        getOptionLabel={(option) => option != null && option.name != null ? option.name : ""}
 
     />
 

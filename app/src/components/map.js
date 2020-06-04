@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import GoogleMapReact from 'google-map-react';
 import PlaceIcon from '@material-ui/icons/Place';
 import Tooltip from "@material-ui/core/Tooltip";
@@ -11,15 +11,17 @@ const Marker = React.memo(({place}) => {
     const history = useHistory();
     return <Tooltip title={place.name}>
         <IconButton onClick={() => history.push(`/place/${place.id}`)}>
-            <PlaceIcon fontSize='large'/></IconButton>
+            <PlaceIcon fontSize='large'/>
+        </IconButton>
     </Tooltip>
 });
 
 const getStyles = makeStyles((theme) => ({
     map: {
-        height: '88%', width: '40%', position: 'fixed'
+        height: '90%', width: '40%', position: 'fixed'
     }
 }));
+
 
 export const SimpleMap = React.memo(props => {
     const places = props.places;
@@ -32,13 +34,22 @@ export const SimpleMap = React.memo(props => {
         }
         : defaultCenter;
 
+    const onChange = ({center, zoom, bounds, marginBounds}) => {
+        if (props.handleOnBoundsChange != null)
+            props.handleOnBoundsChange(bounds)
+    };
+
     // todo: token to env
     return <Paper className={classes.map}>
         <GoogleMapReact
             bootstrapURLKeys={{key: ""}}
             defaultCenter={center}
             defaultZoom={10}
+            onChange={onChange}
+            distanceToMouse={() => {
+            }}
         >
+
             {places != null && places.map(p =>
                 (<Marker key={p.id}
                          lat={p.latitude}

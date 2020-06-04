@@ -54,30 +54,48 @@ class ElasticSearchService:
 
         return attrs
 
-    def search_by_emb(self, emb: List[float], exclude: List[str], count: int, skip: int = 0) -> List[Place]:
+    def search_by_emb(self, emb: List[float], exclude: List[str],
+                      count: int, skip: int = 0,
+                      geo_bounds: Dict = None) -> List[Place]:
+
+        filter = {
+            "must": [
+                {
+                    "match": {
+                        "category": "attraction"
+                    }
+                }
+
+            ],
+            "must_not": [
+                {
+                    "ids": {
+                        "values": exclude
+
+                    }
+                }
+            ]
+        }
+
+        if geo_bounds:
+            filter['filter'] = {
+                "geo_bounding_box": {
+                    "location": {
+                        "top_left": {'lat': geo_bounds['nw']['lat'],
+                                     'lon': geo_bounds['nw']['lng']},
+                        "bottom_right": {'lat': geo_bounds['se']['lat'],
+                                         'lon': geo_bounds['se']['lng']}
+                    }
+                }
+            }
+
         query = {
             "size": count,
             "from": skip,
             "query": {
                 "script_score": {
                     "query": {
-                        "bool": {
-                            "must": [
-                                {
-                                    "match": {
-                                        "category": "attraction"
-                                    }
-                                }
-                            ],
-                            "must_not": [
-                                {
-                                    "ids": {
-                                        "values": exclude
-
-                                    }
-                                }
-                            ]
-                        }
+                        "bool": filter
                     },
                     "script": {
                         "source": "cosineSimilarity(params.queryVector, 'embedding')+1.0",

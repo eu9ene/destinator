@@ -2,8 +2,6 @@ import {
     PLACE_LOAD_FINISHED,
     PLACE_IS_LOADING,
     SEARCH_FINISHED,
-    MYPLACES_ADD,
-    MYPLACES_REMOVE,
     MYPLACES_LOAD_FINISHED,
     SEARCH_LOAD_SUGGESTIONS_COMPLETED,
     RECS_LOAD_FINISHED,
@@ -118,12 +116,12 @@ export function findNearbyCommand(id) {
     };
 }
 
-export function recommendCommand() {
+export function recommendCommand(geoBounds=null) {
     return function (dispatch) {
         return fetch('http://0.0.0.0:8000/recs/personal',
             {
                 method: "POST",
-                body: JSON.stringify({count: PAGE_SIZE})
+                body: JSON.stringify({count: PAGE_SIZE, geoBounds: geoBounds})
             })
             .then(searchResult => searchResult.json())
             .then(searchResult => dispatch(loadRecsDone(searchResult)));
