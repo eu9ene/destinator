@@ -15,6 +15,7 @@ import {AppHeader} from "./components/header";
 import {Redirect} from "react-router-dom";
 
 
+
 const Home = lazy(() => import('./routes/home'));
 const Place = lazy(() => import('./routes/place'));
 const MyPlaces = lazy(() => import('./routes/myplaces'));

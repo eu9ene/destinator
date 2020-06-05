@@ -1,10 +1,8 @@
-import Grid from "@material-ui/core/Grid";
 import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {getRecs} from "../redux/selectors";
 import {loadMyPlacesIdsAll, recommendCommand} from "../redux/actions";
-import {PlacesList} from "../components/placesList";
-import {SimpleMap} from "../components/map";
+import {PlacesScreen} from "../components/placesScreen";
 
 
 export default function Home() {
@@ -14,22 +12,15 @@ export default function Home() {
     useEffect(() => {
         if (places == null) {
             dispatch(recommendCommand());
-                        dispatch(loadMyPlacesIdsAll());
+            dispatch(loadMyPlacesIdsAll());
         }
     });
 
     const handleOnBoundsChange = (bounds) => {
-
         dispatch(recommendCommand(bounds));
-
     };
 
-    return <Grid container spacing={3}>
-        <Grid item md={7}>
-            <PlacesList places={places}/>
-        </Grid>
-        <Grid item md={5} >
-                <SimpleMap places={places} handleOnBoundsChange={handleOnBoundsChange}/>
-        </Grid>
-    </Grid>
+    return <PlacesScreen mainPlace={null}
+                         places={places}
+                         handleOnBoundsChange={handleOnBoundsChange}/>
 }

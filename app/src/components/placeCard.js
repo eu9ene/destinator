@@ -25,14 +25,17 @@ const getStyles = makeStyles((theme) => ({
 }));
 
 
-export const ImgMediaCard = (props) => {
+export const PlaceCard = (props) => {
     const attr = props.attr;
     const classes = getStyles();
     const history = useHistory();
+    const handleOnHover = props.handleOnHover;
+    const handleMouseLeave = props.handleMouseLeave;
 
     return (
         <Card>
-            <CardActionArea onClick={() => history.push(`/place/${attr.id}`)}>
+            <CardActionArea onClick={() => history.push(`/place/${attr.id}`)}
+                            onMouseEnter={handleOnHover} onMouseLeave={handleMouseLeave}>
                 {attr.imageMedium &&
                 <CardMedia
                     component="img"

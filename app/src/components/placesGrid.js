@@ -1,7 +1,7 @@
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Grid from "@material-ui/core/Grid";
 import React from "react";
-import {ImgMediaCard} from "./placeCard";
+import {PlaceCard} from "./placeCard";
 
 
 const attrStyles = makeStyles((theme) => ({
@@ -29,7 +29,7 @@ export const PlacesGrid= (props) => {
     return <Grid container className={classes.grid} spacing={3}>
         {places != null && [...places].map((attr, index) => (
             <Grid key={attr.id} item md={3} style={{order: index}} className={classes.item}>
-                <ImgMediaCard  attr={attr}/>
+                <PlaceCard attr={attr}/>
             </Grid>))}
     </Grid>
 

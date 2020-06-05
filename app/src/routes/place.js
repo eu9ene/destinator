@@ -7,8 +7,8 @@ import {findSimilarCommand, loadPlaceCommand} from "../redux/actions";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Typography from "@material-ui/core/Typography";
 import {PlaceBigCard} from "../components/placeBigCard";
-import {PlacesList} from "../components/placesList";
-import {SimpleMap} from "../components/map";
+
+import {PlacesScreen} from "../components/placesScreen";
 
 
 export default function Place() {
@@ -16,9 +16,7 @@ export default function Place() {
     const dispatch = useDispatch();
     const place = useSelector(getCurrentPlace);
     const attr = place.place;
-
-    const mapPlaces = place.similarPlaces != null && attr != null ? [attr].concat(place.similarPlaces) : [];
-
+    const similarPlaces = place.similarPlaces;
 
     useEffect(() => {
         if (attr == null || id !== place.id) {
@@ -26,6 +24,10 @@ export default function Place() {
             dispatch(findSimilarCommand(id));
         }
     });
+
+    const handleOnBoundsChange = (bounds) => {
+        dispatch(findSimilarCommand(id, bounds))
+    };
 
     //     {/*<Grid item md={1}>*/}
     // {/*    <Button variant={"outlined"} size={'large'} color={'primary'} onClick={() => {*/}
@@ -35,28 +37,24 @@ export default function Place() {
 
     return (<>
             {attr == null && <CircularProgress/>}
-            {attr != null && <Grid container spacing={3}>
-                <Grid item md={7}>
-                    <Grid container spacing={3}>
-                        <Grid item md={12}>
-                            <PlaceBigCard attr={attr}/>
-                        </Grid>
-                        <Grid item md={12}>
-                            <Typography variant="h5" component='h2'> More like this </Typography>
-                        </Grid>
-                        <Grid item md={12}>
-                            <PlacesList places={place.similarPlaces}/>
-                        </Grid>
-                    </Grid>
-                </Grid>
-                <Grid item md={5}>
-                    <SimpleMap places={mapPlaces}/>
-                </Grid>
-            </Grid>
+            {attr != null &&
+            <PlacesScreen mainPlace={attr}
+                          places={similarPlaces}
+                          handleOnBoundsChange={handleOnBoundsChange}
+                          addComponent={
+                              <Grid container spacing={3}>
+                                  <Grid item md={12}>
+                                      <PlaceBigCard attr={attr}/>
+                                  </Grid>
+                                  <Grid item md={12}>
+                                      <Typography variant="h5" component='h2'> More like
+                                          this </Typography>
+                                  </Grid>
+                              </Grid>
+                          }
+            />
             }
-
         </>
-
     );
 }
 

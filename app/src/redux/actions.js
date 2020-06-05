@@ -6,7 +6,7 @@ import {
     SEARCH_LOAD_SUGGESTIONS_COMPLETED,
     RECS_LOAD_FINISHED,
     MYPLACES_IDS_LOAD_FINISHED,
-    SIMILAR_LOAD_FINISHED
+    SIMILAR_LOAD_FINISHED, SECRETS_LOAD_FINISHED
 } from "./actionTypes";
 import {MyPlaceType, PAGE_SIZE} from "./constants";
 
@@ -82,12 +82,12 @@ export function placeIsLoading() {
 //---------------------
 
 
-export function findSimilarCommand(id) {
+export function findSimilarCommand(id, geoBounds=null) {
     return function (dispatch) {
         return fetch('http://0.0.0.0:8000/recs/similar',
             {
                 method: "POST",
-                body: JSON.stringify({id: id, count: PAGE_SIZE})
+                body: JSON.stringify({id: id, count: PAGE_SIZE, geoBounds: geoBounds})
             })
             .then(searchResult => searchResult.json())
             .then(searchResult => dispatch(loadSimilarDone(searchResult)));
@@ -227,4 +227,17 @@ export function removePlace(id, type) {
             .then(() => dispatch(loadMyPlaces(type)))
             .then(() => dispatch(recommendCommand()));
     }
+}
+
+
+
+export function loadSecretsCommand() {
+    return function (dispatch) {
+        return fetch('http://0.0.0.0:8000/secrets/load',
+            {
+                method: "POST"
+            })
+            .then(res => res.json())
+            .then(res => dispatch({type: SECRETS_LOAD_FINISHED, payload: {googleKey: res}}));
+    };
 }

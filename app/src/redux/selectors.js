@@ -31,6 +31,11 @@ export const getMyPlacesIds = (state) => {
 
 };
 
+export const getGoogleKey = (state) => {
+    return  state.secrets.googleKey;
+
+};
+
 
 export const getMyPlacesOfType = (state, type) => {
     return {
