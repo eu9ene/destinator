@@ -30,7 +30,8 @@ class Recommender:
     def similar(self, request: SimilarRequest) -> List[Place]:
         res = self._es_service.get_doc_by_id(request.id)
         emb = res['_source']['embedding']
-        return self._es_service.search_by_emb(emb, exclude=[request.id], count=request.count, skip=request.skip)
+        return self._es_service.search_by_emb(emb, exclude=[request.id], count=request.count, skip=request.skip,
+                                              geo_bounds=request.geoBounds)
 
     def nearby(self, request: NearbyRequest) -> List[Place]:
         doc = self._es_service.get_doc_by_id(request.id)

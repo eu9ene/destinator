@@ -8,7 +8,7 @@ from starlette_prometheus import metrics, PrometheusMiddleware
 
 from api import di
 from api.config import AppConfig
-from api.routers import myplaces, search, recs
+from api.routers import myplaces, search, recs, secrets
 
 api = FastAPI()
 
@@ -25,6 +25,7 @@ api.add_route("/metrics", metrics)
 api.include_router(myplaces.router, prefix="/myplaces", tags=["myplaces"])
 api.include_router(search.router, prefix="/search", tags=["search"])
 api.include_router(recs.router, prefix="/recs", tags=["recommendations"])
+api.include_router(secrets.router, prefix="/secrets", tags=["secrets"])
 
 new_stream_handler = logging.StreamHandler()
 new_stream_handler.setLevel(AppConfig.LOG_LEVEL)

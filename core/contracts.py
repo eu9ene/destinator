@@ -50,6 +50,7 @@ class SimilarRequest(BaseModel):
     id: str = Field(..., title='Attraction id')
     count: int = Field(..., title='Number of items')
     skip: int = Field(0, title='Number of items ot skip')
+    geoBounds: Optional[Dict[str, Dict[str, float]]] = Field(..., title='Geo bounds')
 
 
 class Place(BaseModel):
