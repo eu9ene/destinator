@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
 import GoogleMapReact from 'google-map-react';
 import PlaceIcon from '@material-ui/icons/Place';
-import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import {useHistory} from 'react-router';
 import Paper from "@material-ui/core/Paper";
@@ -9,16 +8,67 @@ import {makeStyles} from "@material-ui/core/styles";
 import {useDispatch, useSelector} from "react-redux";
 import {getGoogleKey} from "../redux/selectors";
 import {loadSecretsCommand} from "../redux/actions";
+import Popover from "@material-ui/core/Popover";
+import Box from "@material-ui/core/Box";
+import {PlaceSmallCard} from "./placeSmallCard";
 
-const Marker = React.memo((props) => {
+const useStyles = makeStyles((theme) => ({
+    popover: {
+        pointerEvents: 'none',
+    },
+    paper: {
+        padding: theme.spacing(1),
+    },
+}));
+
+const Marker = (props) => {
+    const classes = useStyles();
     const history = useHistory();
     const place = props.place;
-    return <Tooltip title={place.name}>
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handlePopoverOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handlePopoverClose = () => {
+        setAnchorEl(null);
+    };
+
+    const open = Boolean(anchorEl);
+
+    return <>
         <IconButton onClick={() => history.push(`/place/${place.id}`)}>
-            <PlaceIcon color={props.color} fontSize={props.fontSize}/>
+            <PlaceIcon color={props.color} fontSize={props.fontSize}
+                       aria-owns={open ? 'mouse-over-popover' : undefined}
+                       aria-haspopup="true"
+                       onMouseEnter={handlePopoverOpen}
+                       onMouseLeave={handlePopoverClose}/>
         </IconButton>
-    </Tooltip>
-});
+        <Popover
+            id="mouse-over-popover"
+            className={classes.popover}
+            open={open}
+            anchorEl={anchorEl}
+            anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+            }}
+            transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+            }}
+            onClose={handlePopoverClose}
+            // disableRestoreFocus
+        >
+            <Box style={{width: '300px'}}>
+                <PlaceSmallCard place={place}/>
+            </Box>
+        </Popover>
+
+    </>
+
+};
 
 const getStyles = makeStyles((theme) => ({
     map: {
@@ -74,8 +124,8 @@ export const PlacesMap = props => {
                                              lat={p.latitude}
                                              lng={p.longitude}
                                              place={p}
-                                             color={'default'}
-                                             fontSize={'medium'}/>))}
+                                             color={'action'}
+                                             fontSize={'default'}/>))}
             {hoverPlace != null && <Marker key={hoverPlace.id}
                                            lat={hoverPlace.latitude}
                                            lng={hoverPlace.longitude}
@@ -88,9 +138,10 @@ export const PlacesMap = props => {
                                           place={mainPlace}
                                           color={'primary'}
                                           fontSize={'large'}/>}
-            < /GoogleMapReact>}
-                </Paper>
-                };
+        </GoogleMapReact>
+        }
+    </Paper>
+};
 
 
 

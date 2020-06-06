@@ -7,8 +7,6 @@ import Typography from "@material-ui/core/Typography";
 
 import React from "react";
 import {useHistory} from 'react-router';
-import {MyPlaceActions} from "./myPlaceActions";
-import CardActions from "@material-ui/core/CardActions";
 import Box from "@material-ui/core/Box";
 import Rating from "@material-ui/lab/Rating";
 import Grid from "@material-ui/core/Grid";
@@ -25,15 +23,13 @@ const getStyles = makeStyles((theme) => ({
 }));
 
 
-export const PlaceCard = (props) => {
+export const PlaceSmallCard = (props) => {
     const place = props.place;
     const classes = getStyles();
     const history = useHistory();
-    const handleOnHover = props.handleOnHover;
-    const handleMouseLeave = props.handleMouseLeave;
 
     return (
-        <Card onMouseEnter={handleOnHover} onMouseLeave={handleMouseLeave}>
+        <Card>
             <CardActionArea onClick={() => history.push(`/place/${place.id}`)}
                             >
                 {place.imageMedium &&
@@ -61,20 +57,11 @@ export const PlaceCard = (props) => {
                                 </Typography></Box>
                             </div>
                         </Grid>
-                        <Grid item xs={12}>
-                            <Typography variant="body2" color="textSecondary" component="p">
-                                {place.description!= null &&
-                                place.description.substring(0, Math.min(place.description.length, 200))}
-                            </Typography>
-                        </Grid>
+
                     </Grid>
                 </CardContent>
 
             </CardActionArea>
-            <CardActions disableSpacing>
-                <MyPlaceActions attrId={place.id}/>
-
-            </CardActions>
         </Card>
 );
 };

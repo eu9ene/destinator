@@ -1,5 +1,5 @@
 import Grid from "@material-ui/core/Grid";
-import React, {useEffect} from "react";
+import React, {useState, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {getMyPlacesOfType} from "../redux/selectors";
 import {loadMyPlaces} from "../redux/actions";
@@ -33,19 +33,15 @@ const getStyles = makeStyles((theme) => ({
 
 
 export default function MyPlaces() {
-    const [value, setValue] = React.useState(MyPlaceType.Loved);
+    const [value, setValue] = useState(MyPlaceType.Loved);
     const classes = getStyles();
-
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
 
     return <Grid container spacing={3}>
         <Grid item md={12}>
             <Tabs value={value}
                   indicatorColor="primary"
                   textColor="primary"
-                  onChange={handleChange}
+                  onChange={(event, newValue) => setValue(newValue)}
                   aria-label="my-places-selector"
                   centered
                   className={classes.tabs}>

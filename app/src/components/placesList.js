@@ -22,10 +22,10 @@ export const PlacesList = (props) => {
     const places = props.places;
 
     return <Grid container className={classes.gridList} spacing={3}>
-        {places != null && [...places].map((attr, index) => (
-            <Grid key={attr.id} item md={4} style={{order: index}} className={classes.item}>
-                <PlaceCard attr={attr}
-                           handleOnHover={() => props.handleOnHover(attr)}
+        {places != null && [...places].map((place, index) => (
+            <Grid key={place.id} item md={4} style={{order: index}} className={classes.item}>
+                <PlaceCard place={place}
+                           handleOnHover={() => props.handleOnHover(place)}
                            handleMouseLeave={() => props.handleMouseLeave()}/>
             </Grid>))}
     </Grid>

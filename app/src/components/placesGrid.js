@@ -27,9 +27,9 @@ export const PlacesGrid= (props) => {
     const places = props.places;
 
     return <Grid container className={classes.grid} spacing={3}>
-        {places != null && [...places].map((attr, index) => (
-            <Grid key={attr.id} item md={3} style={{order: index}} className={classes.item}>
-                <PlaceCard attr={attr}/>
+        {places != null && [...places].map((place, index) => (
+            <Grid key={place.id} item md={3} style={{order: index}} className={classes.item}>
+                <PlaceCard attr={place}/>
             </Grid>))}
     </Grid>
 

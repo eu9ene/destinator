@@ -9,17 +9,34 @@ import Typography from "@material-ui/core/Typography";
 import {PlaceBigCard} from "../components/placeBigCard";
 
 import {PlacesScreen} from "../components/placesScreen";
+import Fab from "@material-ui/core/Fab";
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import {useHistory} from 'react-router';
+import makeStyles from "@material-ui/core/styles/makeStyles";
+
+
+
+const useStyles = makeStyles((theme) => ({
+  fab: {
+    position: 'absolute',
+    top: theme.spacing(10),
+    left: theme.spacing(2),
+  }
+}));
 
 
 export default function Place() {
     const {id} = useParams();
     const dispatch = useDispatch();
     const place = useSelector(getCurrentPlace);
-    const attr = place.place;
+    let attr = place.place;
     const similarPlaces = place.similarPlaces;
+    const history = useHistory();
+    const classes = useStyles();
 
     useEffect(() => {
         if (attr == null || id !== place.id) {
+            attr = null;
             dispatch(loadPlaceCommand(id));
             dispatch(findSimilarCommand(id));
         }
@@ -29,13 +46,12 @@ export default function Place() {
         dispatch(findSimilarCommand(id, bounds))
     };
 
-    //     {/*<Grid item md={1}>*/}
-    // {/*    <Button variant={"outlined"} size={'large'} color={'primary'} onClick={() => {*/}
-    // {/*        history.goBack()*/}
-    // {/*    }}>Back</Button>*/}
-    // {/*</Grid>*/}
-
     return (<>
+            {/*<Fab color="primary" aria-label="add" className={classes.fab}>*/}
+            {/*    <ArrowBackIcon onClick={() => {*/}
+            {/*        history.goBack()*/}
+            {/*    }}/>*/}
+            {/*</Fab>*/}
             {attr == null && <CircularProgress/>}
             {attr != null &&
             <PlacesScreen mainPlace={attr}
