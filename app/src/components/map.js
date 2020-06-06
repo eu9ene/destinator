@@ -26,20 +26,23 @@ const Marker = (props) => {
     const history = useHistory();
     const place = props.place;
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [color, setColor] = React.useState(props.color);
 
     const handlePopoverOpen = (event) => {
         setAnchorEl(event.currentTarget);
+        setColor('secondary')
     };
 
     const handlePopoverClose = () => {
         setAnchorEl(null);
+        setColor(props.color);
     };
 
     const open = Boolean(anchorEl);
 
     return <>
         <IconButton onClick={() => history.push(`/place/${place.id}`)}>
-            <PlaceIcon color={props.color} fontSize={props.fontSize}
+            <PlaceIcon color={color} fontSize={props.fontSize}
                        aria-owns={open ? 'mouse-over-popover' : undefined}
                        aria-haspopup="true"
                        onMouseEnter={handlePopoverOpen}
@@ -61,9 +64,8 @@ const Marker = (props) => {
             onClose={handlePopoverClose}
             // disableRestoreFocus
         >
-            <Box style={{width: '300px'}}>
-                <PlaceSmallCard place={place}/>
-            </Box>
+
+            <PlaceSmallCard place={place}/>
         </Popover>
 
     </>
@@ -114,6 +116,7 @@ export const PlacesMap = props => {
         {googleKey && <GoogleMapReact
             bootstrapURLKeys={{key: googleKey}}
             defaultCenter={center}
+            center={center}
             defaultZoom={8}
             onChange={onChange}
             distanceToMouse={() => {
@@ -125,7 +128,7 @@ export const PlacesMap = props => {
                                              lng={p.longitude}
                                              place={p}
                                              color={'action'}
-                                             fontSize={'default'}/>))}
+                                             fontSize={'large'}/>))}
             {hoverPlace != null && <Marker key={hoverPlace.id}
                                            lat={hoverPlace.latitude}
                                            lng={hoverPlace.longitude}
