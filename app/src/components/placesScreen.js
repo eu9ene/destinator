@@ -26,26 +26,28 @@ export const PlacesScreen = (props) => {
     };
 
     return <Grid container spacing={3}>
-        <Grid item md={7}>
-            {props.addComponent}
-
-            {places == null && <CircularProgress/>}
-            {places != null &&
-            <InfiniteScroll
-                loadMore={(page) => props.handleLoadMore && props.handleLoadMore(geoBounds)}
-                hasMore={props.hasMore}
-                pageStart={1}
-            >
-                <Grid container spacing={3}>
-                    {[...places].map((place, index) => (
-                        <Grid key={place.id} item md={6} style={{order: index}}>
-                            <PlaceCard place={place}
-                                       handleOnHover={() => handleOnHover(place)}
-                                       handleMouseLeave={() => handleMouseLeave()}/>
-                        </Grid>))}
-                </Grid>
-            </InfiniteScroll>}
-
+        <Grid item md={7} container spacing={3}>
+            <Grid item md={12}>
+                {props.addComponent}
+            </Grid>
+            <Grid item container spacing={3}>
+                {places == null && <CircularProgress/>}
+                {places != null &&
+                <InfiniteScroll
+                    loadMore={(page) => props.handleLoadMore && props.handleLoadMore(geoBounds)}
+                    hasMore={props.hasMore}
+                    pageStart={1}
+                >
+                    <Grid container spacing={3}>
+                        {[...places].map((place, index) => (
+                            <Grid key={place.id} item md={6} style={{order: index}}>
+                                <PlaceCard place={place}
+                                           handleOnHover={() => handleOnHover(place)}
+                                           handleMouseLeave={() => handleMouseLeave()}/>
+                            </Grid>))}
+                    </Grid>
+                </InfiniteScroll>}
+            </Grid>
         </Grid>
         <Grid item md={5}>
             <PlacesMap places={places}

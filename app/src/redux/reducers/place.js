@@ -1,4 +1,4 @@
-import {PLACE_LOAD_FINISHED, SIMILAR_LOAD_FINISHED} from "../actionTypes";
+import {PLACE_LOAD_FINISHED} from "../actionTypes";
 
 const initialState = {
     currentPlace: null

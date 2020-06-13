@@ -1,6 +1,6 @@
-import React, {lazy, Suspense, useEffect} from 'react';
+import React, {lazy, Suspense} from 'react';
 import './App.css';
-import {Provider, useDispatch} from "react-redux";
+import {Provider} from "react-redux";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import makeStyles from "@material-ui/core/styles/makeStyles";
@@ -13,7 +13,7 @@ import {ConnectedRouter} from 'connected-react-router'
 import {Switch, Route} from "react-router-dom";
 import {AppHeader} from "./components/header";
 import {Redirect} from "react-router-dom";
-import {loadMyPlacesIdsAll, recommendCommand} from "./redux/actions";
+import {MyPlacesLoader} from "./components/myPlacesLoader";
 
 
 
@@ -59,6 +59,7 @@ function App() {
                             <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
                         </header>
                         <CssBaseline/>
+                        <MyPlacesLoader/>
                         <AppHeader/>
                         <Container maxWidth="xl" className={classes.main}>
                             <Grid container>

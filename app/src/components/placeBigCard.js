@@ -71,13 +71,13 @@ export const PlaceBigCard =  (props) =>{
                 <Box ml={'auto'}>
                     {attr.website != null && attr.website !== "" &&
                     <Box mr={2} component='span'>
-                        <Link variant="button" href={attr.website}>Website</Link>
+                        <Link rel="noreferrer" target="_blank" variant="button" href={attr.website}>Website</Link>
                     </Box>}
                     <Box mr={2} component='span'>
-                        <Link variant="button" href={`https://www.google.ca/search?q=${attr.name}`}>Google</Link>
+                        <Link rel="noreferrer"  target="_blank" variant="button" href={`https://www.google.ca/search?q=${attr.name}`}>Google</Link>
                     </Box>
                     <Box mr={2} component='span'>
-                        <Link variant="button" href={attr.tripadvisorUrl}>TripAdvisor</Link>
+                        <Link rel="noreferrer" target="_blank" variant="button" href={attr.tripadvisorUrl}>TripAdvisor</Link>
                     </Box>
                 </Box>
 

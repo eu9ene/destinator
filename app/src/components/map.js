@@ -78,7 +78,7 @@ const Marker = (props) => {
 
 const getStyles = makeStyles((theme) => ({
     map: {
-        height: '90%', width: '40%', position: 'fixed'
+        height: '88%', width: '42%', position: 'fixed'
     }
 }));
 

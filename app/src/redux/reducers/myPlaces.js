@@ -1,4 +1,4 @@
-import {MYPLACES_IDS_LOAD_FINISHED, MYPLACES_LOAD_FINISHED} from "../actionTypes";
+import {MYPLACES_IDS_LOAD_FINISHED} from "../actionTypes";
 import {MyPlaceType} from "../constants"
 
 const initialState = {

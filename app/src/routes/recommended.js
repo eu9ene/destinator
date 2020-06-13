@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {getMyPlacesIds, getPlaces} from "../redux/selectors";
-import {loadMyPlacesIdsAll, recommendCommand, recommendMoreCommand} from "../redux/actions";
+import {recommendCommand, recommendMoreCommand} from "../redux/actions";
 import {PlacesScreen} from "../components/placesScreen";
 import {MyPlaceType} from "../redux/constants";
 import {IntroCard} from "../components/introCard";

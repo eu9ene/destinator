@@ -3,11 +3,9 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 import {history} from "../redux/store";
 import {Search} from "./search";
-import React, {useEffect} from "react";
+import React from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {useRouteMatch} from "react-router-dom";
-import {useDispatch} from "react-redux";
-import {loadMyPlacesIdsAll, recommendCommand} from "../redux/actions";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -26,12 +24,6 @@ export function AppHeader() {
     const isMyPlaces = useRouteMatch("/myplaces");
     const isTop = useRouteMatch("/top");
 
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(loadMyPlacesIdsAll());
-    }, []);
-
     return <AppBar
         position="sticky"
         color="inherit">
@@ -48,7 +40,7 @@ export function AppHeader() {
                     onClick={() => {
                         history.push('/myplaces')
                     }}>
-                MyPlaces</Button>
+                My Places</Button>
             <Search/>
 
         </Toolbar>
