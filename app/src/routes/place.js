@@ -2,8 +2,12 @@ import React, {useEffect} from "react";
 import {useParams} from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import {useDispatch, useSelector} from "react-redux";
-import {getCurrentPlace} from "../redux/selectors";
-import {findSimilarCommand, loadPlaceCommand} from "../redux/actions";
+import {getCurrentPlace, getPlaces} from "../redux/selectors";
+import {
+    findMoreSimilarCommand,
+    findSimilarCommand,
+    loadPlaceCommand
+} from "../redux/actions";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Typography from "@material-ui/core/Typography";
 import {PlaceBigCard} from "../components/placeBigCard";
@@ -15,13 +19,12 @@ import {useHistory} from 'react-router';
 import makeStyles from "@material-ui/core/styles/makeStyles";
 
 
-
 const useStyles = makeStyles((theme) => ({
-  fab: {
-    position: 'absolute',
-    top: theme.spacing(10),
-    left: theme.spacing(2),
-  }
+    fab: {
+        position: 'absolute',
+        top: theme.spacing(10),
+        left: theme.spacing(2),
+    }
 }));
 
 
@@ -30,21 +33,14 @@ export default function Place() {
     const dispatch = useDispatch();
     const place = useSelector(getCurrentPlace);
     let attr = place.place;
-    const similarPlaces = place.similarPlaces;
+    const {places, hasMore} = useSelector(getPlaces);
     const history = useHistory();
     const classes = useStyles();
 
     useEffect(() => {
-        if (attr == null || id !== place.id) {
-            attr = null;
-            dispatch(loadPlaceCommand(id));
-            dispatch(findSimilarCommand(id));
-        }
-    });
-
-    const handleOnBoundsChange = (bounds) => {
-        dispatch(findSimilarCommand(id, bounds))
-    };
+        dispatch(loadPlaceCommand(id));
+        dispatch(findSimilarCommand(id));
+    }, [id]);
 
     return (<>
             {/*<Fab color="primary" aria-label="add" className={classes.fab}>*/}
@@ -55,8 +51,11 @@ export default function Place() {
             {attr == null && <CircularProgress/>}
             {attr != null &&
             <PlacesScreen mainPlace={attr}
-                          places={similarPlaces}
-                          handleOnBoundsChange={handleOnBoundsChange}
+                          places={places}
+                          handleOnBoundsChange={bounds => dispatch(findSimilarCommand(id, bounds))}
+                          handleLoadMore={bounds =>
+                              dispatch(findMoreSimilarCommand(id, !places ? 0 : places.length, bounds))}
+                          hasMore={hasMore}
                           addComponent={
                               <Grid container spacing={3}>
                                   <Grid item md={12}>

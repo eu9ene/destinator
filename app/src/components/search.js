@@ -80,7 +80,7 @@ export const Search = () => {
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => {
             setInputValue(newInputValue);
-            dispatch(searchCommand(newInputValue, history))
+            dispatch(searchCommand(newInputValue))
         }}
         // fullWidth
         freeSolo

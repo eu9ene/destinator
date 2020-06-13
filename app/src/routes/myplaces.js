@@ -1,7 +1,7 @@
 import Grid from "@material-ui/core/Grid";
 import React, {useState, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {getMyPlacesOfType} from "../redux/selectors";
+import {getMyPlacesOfType, getPlaces} from "../redux/selectors";
 import {loadMyPlaces} from "../redux/actions";
 import {MyPlaceType} from "../redux/constants";
 import Tabs from "@material-ui/core/Tabs";
@@ -12,17 +12,19 @@ import {PlacesScreen} from "../components/placesScreen";
 const MyPlacesOfType = (props) => {
     const type = props.type;
     const dispatch = useDispatch();
-    const places = useSelector(state => getMyPlacesOfType(state, type)).places;
+    const {places, hasMore} = useSelector(getPlaces);
 
     useEffect(() => {
-        if (places == null)
             dispatch(loadMyPlaces(type));
-    });
+    }, [type]);
 
     return <PlacesScreen places={places}
                          mainPlace={null}
                          handleOnBoundsChange={null}
-                         addComponent={null}/>
+                         handleLoadMore={null}
+                         hasMore={false}
+                         addComponent={null}
+    />
 };
 
 const getStyles = makeStyles((theme) => ({

@@ -1,5 +1,8 @@
-export const getRecs = state => {
-    return state.recs.places;
+export const getPlaces = state => {
+    return {
+        places: state.recs.places,
+        hasMore: state.recs.hasMore
+    };
 };
 
 export const getSuggestions = state => {
@@ -7,24 +10,14 @@ export const getSuggestions = state => {
 };
 
 
-export const getHasMore = state => {
-    return state.search.hasMore;
-};
-
 
 export const getCurrentPlace = state => {
     return {
-        place: state.place.currentPlace,
-        id: state.place.id,
-        similarPlaces: state.place.similarPlaces
+        place: state.place.currentPlace
     };
 };
 
-export const getMyPlaces = (state) => {
-    return {
-        places: state.myPlaces.places
-    };
-};
+
 
 export const getMyPlacesIds = (state) => {
     return  state.myPlaces.placesIds;

@@ -16,9 +16,11 @@ import {Redirect} from "react-router-dom";
 
 
 
-const Home = lazy(() => import('./routes/home'));
+const Recommended = lazy(() => import('./routes/recommended'));
 const Place = lazy(() => import('./routes/place'));
 const MyPlaces = lazy(() => import('./routes/myplaces'));
+const Top = lazy(() => import('./routes/top'));
+
 
 const themeX = createMuiTheme({
     palette: {
@@ -64,9 +66,10 @@ function App() {
                                         <Switch>
                                             <Route exact path='/myplaces' component={MyPlaces}/>
                                             <Route exact path={`/place/:id`} component={Place}/>
-                                            <Route exact path='/home' component={Home}/>
+                                            <Route exact path='/recommended' component={Recommended}/>
+                                            <Route exact path='/top' component={Top}/>
                                             <Route exact path="/">
-                                                <Redirect to="/home"/>
+                                                <Redirect to="/recommended"/>
                                             </Route>
                                         </Switch>
                                     </Suspense>

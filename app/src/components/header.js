@@ -20,8 +20,9 @@ const useStyles = makeStyles((theme) => ({
 
 export function AppHeader() {
     const classes = useStyles();
-    const isHome = useRouteMatch("/home");
+    const isHome = useRouteMatch("/recommended");
     const isMyPlaces = useRouteMatch("/myplaces");
+    const isTop = useRouteMatch("/top");
 
     return <AppBar
         position="sticky"
@@ -29,8 +30,12 @@ export function AppHeader() {
         <Toolbar>
             <Button variant="text" color={isHome ? 'primary' : 'default'} className={classes.menuButton}
                     onClick={() => {
-                        history.push('/home')
-                    }}>Home</Button>
+                        history.push('/recommended')
+                    }}>Recommended</Button>
+            <Button variant="text" color={isTop ? 'primary' : 'default'} className={classes.menuButton}
+                    onClick={() => {
+                        history.push('/top')
+                    }}>Top</Button>
             <Button variant="text" color={isMyPlaces ? 'primary' : 'default'} className={classes.menuButton}
                     onClick={() => {
                         history.push('/myplaces')

@@ -10,21 +10,25 @@ class PlaceType(str, Enum):
     bucketList = 'bucketList'
 
 
-class SearchRequest(BaseModel):
+class SortType(str, Enum):
+    rating = 'rating'
+    reviews = 'reviews'
+
+
+class PagedRequest(BaseModel):
+    count: int = Field(..., title='Number of items')
+    skip: int = Field(0, title='Number of items ot skip')
+
+
+class SearchRequest(PagedRequest):
     query: str = Field(..., title='Search string')
-    count: int = Field(..., title='Number of items')
-    skip: int = Field(0, title='Number of items ot skip')
 
 
-class NearbyRequest(BaseModel):
+class NearbyRequest(PagedRequest):
     id: str = Field(..., title='Attraction id')
-    count: int = Field(..., title='Number of items')
-    skip: int = Field(0, title='Number of items ot skip')
 
 
-class PersonalRequest(BaseModel):
-    count: int = Field(..., title='Number of items')
-    skip: int = Field(0, title='Number of items ot skip')
+class PlacesRequest(PagedRequest):
     geoBounds: Optional[Dict[str, Dict[str, float]]] = Field(..., title='Geo bounds')
 
 
@@ -46,11 +50,12 @@ class GetMyPlacesRequest(BaseModel):
     type: PlaceType = Field(..., title='My places place_type')
 
 
-class SimilarRequest(BaseModel):
+class SimilarRequest(PlacesRequest):
     id: str = Field(..., title='Attraction id')
-    count: int = Field(..., title='Number of items')
-    skip: int = Field(0, title='Number of items ot skip')
-    geoBounds: Optional[Dict[str, Dict[str, float]]] = Field(..., title='Geo bounds')
+
+
+class TopRequest(PlacesRequest):
+    sort: SortType = Field(..., title='Sort type')
 
 
 class Place(BaseModel):

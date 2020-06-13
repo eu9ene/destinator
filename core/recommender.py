@@ -1,6 +1,7 @@
 from typing import List
 
-from core.contracts import PersonalRequest, PlaceType, GetMyPlacesRequest, SimilarRequest, Place, NearbyRequest
+from core.contracts import PlacesRequest, PlaceType, GetMyPlacesRequest, SimilarRequest, Place, NearbyRequest, \
+    TopRequest, SortType
 from core.es_service import ElasticSearchService
 from core.my_places import MyPlacesStore
 
@@ -12,7 +13,7 @@ class Recommender:
         self._es_service = es_service
         self._my_places = my_places
 
-    def personal(self, request: PersonalRequest) -> List[Place]:
+    def personal(self, request: PlacesRequest) -> List[Place]:
         loved_ids = self._my_places.my_places_ids(GetMyPlacesRequest(type=PlaceType.loved))
         if not loved_ids:
             return []
@@ -23,7 +24,7 @@ class Recommender:
 
         been_ids = self._my_places.my_places_ids(GetMyPlacesRequest(type=PlaceType.been))
 
-        return self._es_service.search_by_emb(mean_emb, exclude=loved_ids+been_ids,
+        return self._es_service.search_by_emb(mean_emb, exclude=loved_ids + been_ids,
                                               count=request.count, skip=request.skip,
                                               geo_bounds=request.geoBounds)
 
@@ -37,4 +38,10 @@ class Recommender:
         doc = self._es_service.get_doc_by_id(request.id)
         return self._es_service.search_by_geo(latitude=doc['_source']['latitude'],
                                               longitude=doc['_source']['longitude'],
+                                              count=request.count, skip=request.skip)
+
+    def top(self, request: TopRequest) -> List[Place]:
+        sort_field = 'rating' if request.sort == SortType.rating else 'num_reviews'
+        return self._es_service.get_with_sort(sort_field,
+                                              geo_bounds=request.geoBounds,
                                               count=request.count, skip=request.skip)

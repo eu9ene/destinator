@@ -19,6 +19,10 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         padding: theme.spacing(1),
     },
+    marker: {
+        position: 'absolute',
+        transform: 'translate(-50%, -100%)'
+    }
 }));
 
 const Marker = (props) => {
@@ -41,7 +45,7 @@ const Marker = (props) => {
     const open = Boolean(anchorEl);
 
     return <>
-        <IconButton onClick={() => history.push(`/place/${place.id}`)}>
+        <IconButton className={classes.marker} onClick={() => history.push(`/place/${place.id}`)}>
             <PlaceIcon color={color} fontSize={props.fontSize}
                        aria-owns={open ? 'mouse-over-popover' : undefined}
                        aria-haspopup="true"
@@ -84,9 +88,8 @@ export const PlacesMap = props => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (googleKey == null)
-            dispatch(loadSecretsCommand());
-    });
+        dispatch(loadSecretsCommand());
+    }, []);
 
     const places = props.places;
     const hoverPlace = props.hoverPlace;
@@ -116,7 +119,7 @@ export const PlacesMap = props => {
         {googleKey && <GoogleMapReact
             bootstrapURLKeys={{key: googleKey}}
             defaultCenter={center}
-            center={center}
+            // center={center}
             defaultZoom={8}
             onChange={onChange}
             distanceToMouse={() => {

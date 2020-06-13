@@ -4,15 +4,20 @@ from fastapi import APIRouter
 from fastapi import Depends
 
 from api import di
-from core.contracts import Place, SimilarRequest, NearbyRequest, PersonalRequest
+from core.contracts import Place, SimilarRequest, NearbyRequest, PlacesRequest, TopRequest
 from core.recommender import Recommender
 
 router = APIRouter()
 
 
 @router.post("/personal", response_model=List[Place])
-async def personal(request: PersonalRequest, recommender: Recommender = Depends(di.get_recommender)):
+async def personal(request: PlacesRequest, recommender: Recommender = Depends(di.get_recommender)):
     return recommender.personal(request)
+
+
+@router.post("/top", response_model=List[Place])
+async def top(request: TopRequest, recommender: Recommender = Depends(di.get_recommender)):
+    return recommender.top(request)
 
 
 @router.post("/similar", response_model=List[Place])

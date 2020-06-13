@@ -112,6 +112,49 @@ class ElasticSearchService:
 
         return attrs
 
+    def get_with_sort(self, sort_field: str,
+                      count: int, skip: int = 0,
+                      geo_bounds: Dict = None) -> List[Place]:
+
+        filter = {
+            "must": [
+                {
+                    "match": {
+                        "category": "attraction"
+                    }
+                }
+
+            ]
+        }
+
+        if geo_bounds:
+            filter['filter'] = {
+                "geo_bounding_box": {
+                    "location": {
+                        "top_left": {'lat': geo_bounds['nw']['lat'],
+                                     'lon': geo_bounds['nw']['lng']},
+                        "bottom_right": {'lat': geo_bounds['se']['lat'],
+                                         'lon': geo_bounds['se']['lng']}
+                    }
+                }
+            }
+
+        query = {
+            "size": count,
+            "from": skip,
+            "sort": [
+                {f"{sort_field}": "desc"}
+            ],
+            "query": {
+                "bool": filter
+            }
+        }
+
+        res = self._es.search(index=self._index, body=query)
+        attrs = self._get_attrs(res['hits']['hits'])
+
+        return attrs
+
     def search_by_geo(self, latitude: float, longitude: float, count: int, skip: int) -> List[Place]:
         query = {
             "size": count,

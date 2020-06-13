@@ -1,17 +1,14 @@
 import {
     PLACE_LOAD_FINISHED,
-    PLACE_IS_LOADING,
-    SEARCH_FINISHED,
-    MYPLACES_LOAD_FINISHED,
     SEARCH_LOAD_SUGGESTIONS_COMPLETED,
     RECS_LOAD_FINISHED,
     MYPLACES_IDS_LOAD_FINISHED,
-    SIMILAR_LOAD_FINISHED, SECRETS_LOAD_FINISHED
+    SECRETS_LOAD_FINISHED, RECS_LOAD_MORE_FINISHED
 } from "./actionTypes";
 import {MyPlaceType, PAGE_SIZE} from "./constants";
 
 
-export function searchCommand(searchQuery, history, skip = 0) {
+export function searchCommand(searchQuery, skip = 0) {
     return function (dispatch) {
         if (searchQuery === '') {
             return;
@@ -23,17 +20,6 @@ export function searchCommand(searchQuery, history, skip = 0) {
             })
             .then(searchResult => searchResult.json())
             .then(searchResult => dispatch(searchSuggestionsLoaded(searchResult)));
-        // .then(history.push('/'));
-    };
-}
-
-
-export function searchDone(result) {
-    return {
-        type: SEARCH_FINISHED,
-        payload: {
-            result: result
-        }
     };
 }
 
@@ -50,14 +36,14 @@ export function searchSuggestionsLoaded(result) {
 
 export function loadPlaceCommand(id) {
     return function (dispatch) {
-        // dispatch(placeIsLoading());
+        dispatch(loadPlaceDone(null));
         return fetch('http://0.0.0.0:8000/search/byids',
             {
                 method: "POST",
                 body: JSON.stringify({ids: [id]})
             })
             .then(searchResult => searchResult.json())
-            .then(searchResult => dispatch(loadPlaceDone(searchResult[0], id)));
+            .then(searchResult => dispatch(loadPlaceDone(searchResult[0])));
 
     };
 }
@@ -67,67 +53,97 @@ export function loadPlaceDone(result, id) {
     return {
         type: PLACE_LOAD_FINISHED,
         payload: {
-            place: result,
-            id: id
+            place: result
         }
     };
 }
 
-export function placeIsLoading() {
-    return {
-        type: PLACE_IS_LOADING
-    };
-}
 
 //---------------------
 
 
-export function findSimilarCommand(id, geoBounds=null) {
-    return function (dispatch) {
-        return fetch('http://0.0.0.0:8000/recs/similar',
-            {
-                method: "POST",
-                body: JSON.stringify({id: id, count: PAGE_SIZE, geoBounds: geoBounds})
-            })
-            .then(searchResult => searchResult.json())
-            .then(searchResult => dispatch(loadSimilarDone(searchResult)));
-    };
-}
-
-export function loadSimilarDone(result) {
-    return {
-        type: SIMILAR_LOAD_FINISHED,
-        payload: {
-            result: result,
-        }
-    };
+function fetchSimilar(id, geoBounds, skip) {
+    return fetch('http://0.0.0.0:8000/recs/similar',
+        {
+            method: "POST",
+            body: JSON.stringify({id: id, count: PAGE_SIZE, geoBounds: geoBounds, skip: skip})
+        })
+        .then(searchResult => searchResult.json());
 }
 
 
-export function findNearbyCommand(id) {
-    return function (dispatch) {
-        return fetch('http://0.0.0.0:8000/recs/nearby',
-            {
-                method: "POST",
-                body: JSON.stringify({id: id, count: PAGE_SIZE})
+function fetchRecommendations(skip, geoBounds) {
+    return fetch('http://0.0.0.0:8000/recs/personal',
+        {
+            method: "POST",
+            body: JSON.stringify({
+                count: PAGE_SIZE,
+                skip: skip,
+                geoBounds: geoBounds
             })
-            .then(searchResult => searchResult.json())
+        })
+        .then(searchResult => searchResult.json());
+}
+
+function fetchTop(skip, geoBounds) {
+    return fetch('http://0.0.0.0:8000/recs/top',
+        {
+            method: "POST",
+            body: JSON.stringify({
+                count: PAGE_SIZE,
+                skip: skip,
+                geoBounds: geoBounds
+            })
+        })
+        .then(searchResult => searchResult.json());
+}
+
+export function findSimilarCommand(id, geoBounds = null) {
+    return function (dispatch) {
+        dispatch(loadRecsDone(null));
+        return fetchSimilar(id, geoBounds)
             .then(searchResult => dispatch(loadRecsDone(searchResult)));
     };
 }
 
-export function recommendCommand(geoBounds=null) {
+export function findMoreSimilarCommand(id, skip, geoBounds = null) {
     return function (dispatch) {
-        return fetch('http://0.0.0.0:8000/recs/personal',
-            {
-                method: "POST",
-                body: JSON.stringify({count: PAGE_SIZE, geoBounds: geoBounds})
-            })
-            .then(searchResult => searchResult.json())
+        return fetchSimilar(id, geoBounds, skip)
+            .then(searchResult => dispatch(loadMoreRecsDone(searchResult)));
+    };
+}
+
+
+export function topCommand(geoBounds = null) {
+    return function (dispatch) {
+        dispatch(loadRecsDone(null));
+        return fetchTop(0, geoBounds)
             .then(searchResult => dispatch(loadRecsDone(searchResult)));
     };
 }
 
+export function topMoreCommand(skip, geoBounds = null) {
+    return function (dispatch) {
+        return fetchTop(skip, geoBounds)
+            .then(searchResult => dispatch(loadRecsDone(searchResult)));
+    };
+}
+
+export function recommendCommand(geoBounds = null) {
+    return function (dispatch) {
+        dispatch(loadRecsDone(null));
+        return fetchRecommendations(0, geoBounds)
+            .then(searchResult => dispatch(loadRecsDone(searchResult)));
+    };
+}
+
+
+export function recommendMoreCommand(skip, geoBounds = null) {
+    return function (dispatch) {
+        return fetchRecommendations(skip, geoBounds)
+            .then(searchResult => dispatch(loadMoreRecsDone(searchResult)));
+    };
+}
 
 export function loadRecsDone(result) {
     return {
@@ -139,11 +155,21 @@ export function loadRecsDone(result) {
 }
 
 
+export function loadMoreRecsDone(result) {
+    return {
+        type: RECS_LOAD_MORE_FINISHED,
+        payload: {
+            result: result,
+        }
+    };
+}
+
 // ------------------
 
 
 export function loadMyPlaces(type) {
     return function (dispatch) {
+        dispatch(loadRecsDone(null));
         return fetch('http://0.0.0.0:8000/myplaces/places',
             {
                 method: "POST",
@@ -151,7 +177,7 @@ export function loadMyPlaces(type) {
             })
             .then(res => res.json())
             .then(res => {
-                dispatch(myPlacesLoaded(res, type));
+                dispatch(loadRecsDone(res));
                 return res;
             })
             .then(res => dispatch(myPlacesIdsLoaded(res != null ? res.map(p => p.id) : null, type)));
@@ -194,16 +220,6 @@ function myPlacesIdsLoaded(res, type) {
     };
 }
 
-function myPlacesLoaded(res, type) {
-    return {
-        type: MYPLACES_LOAD_FINISHED,
-        payload: {
-            type: type,
-            result: res
-        }
-    };
-}
-
 
 export function addPlace(id, type) {
     return function (dispatch) {
@@ -212,8 +228,8 @@ export function addPlace(id, type) {
                 method: "POST",
                 body: JSON.stringify({id: id, type: type})
             })
-            .then(() => dispatch(loadMyPlaces(type)))
-            .then(() => dispatch(recommendCommand()));
+            .then(() => dispatch(loadMyPlaces(type)));
+            // .then(() => dispatch(recommendCommand()));
     }
 }
 
@@ -224,11 +240,10 @@ export function removePlace(id, type) {
                 method: "POST",
                 body: JSON.stringify({id: id, type: type})
             })
-            .then(() => dispatch(loadMyPlaces(type)))
-            .then(() => dispatch(recommendCommand()));
+            .then(() => dispatch(loadMyPlaces(type)));
+            // .then(() => dispatch(recommendCommand()));
     }
 }
-
 
 
 export function loadSecretsCommand() {
