@@ -230,7 +230,6 @@ export function addPlace(id, type) {
                 body: JSON.stringify({id: id, type: type})
             })
             .then(() => dispatch(loadMyPlacesIds(type)));
-            // .then(() => dispatch(recommendCommand()));
     }
 }
 
@@ -242,7 +241,6 @@ export function removePlace(id, type) {
                 body: JSON.stringify({id: id, type: type})
             })
             .then(() => dispatch(loadMyPlacesIds(type)));
-            // .then(() => dispatch(recommendCommand()));
     }
 }
 

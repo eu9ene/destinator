@@ -11,14 +11,18 @@ export default function Recommended() {
     const {places, hasMore} = useSelector(getPlaces);
     const dispatch = useDispatch();
     const favoritesIds = useSelector(getMyPlacesIds)[MyPlaceType.Loved];
+    const beenIds = useSelector(getMyPlacesIds)[MyPlaceType.Been];
+
+    const placesToShow = places != null
+        ? places.filter(p => !favoritesIds.has(p.id) && !beenIds.has(p.id))
+        : null;
 
     useEffect(() => {
         dispatch(recommendCommand());
-        dispatch(loadMyPlacesIdsAll());
-    }, []);
+    }, [...favoritesIds]);
 
     return <PlacesScreen mainPlace={null}
-                         places={places}
+                         places={placesToShow}
                          addComponent={favoritesIds.size === 0 && <IntroCard/>}
                          handleOnBoundsChange={bounds => dispatch(recommendCommand(bounds))}
                          handleLoadMore={bounds =>
