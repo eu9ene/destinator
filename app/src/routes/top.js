@@ -11,7 +11,6 @@ export default function Top() {
 
     useEffect(() => {
         dispatch(topCommand());
-        dispatch(loadMyPlacesIdsAll());
     }, []);
 
     return <PlacesScreen mainPlace={null}

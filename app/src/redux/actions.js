@@ -92,7 +92,8 @@ function fetchTop(skip, geoBounds) {
             body: JSON.stringify({
                 count: PAGE_SIZE,
                 skip: skip,
-                geoBounds: geoBounds
+                geoBounds: geoBounds,
+                sort: "reviews"
             })
         })
         .then(searchResult => searchResult.json());
@@ -125,7 +126,7 @@ export function topCommand(geoBounds = null) {
 export function topMoreCommand(skip, geoBounds = null) {
     return function (dispatch) {
         return fetchTop(skip, geoBounds)
-            .then(searchResult => dispatch(loadRecsDone(searchResult)));
+            .then(searchResult => dispatch(loadMoreRecsDone(searchResult)));
     };
 }
 
@@ -228,7 +229,7 @@ export function addPlace(id, type) {
                 method: "POST",
                 body: JSON.stringify({id: id, type: type})
             })
-            .then(() => dispatch(loadMyPlaces(type)));
+            .then(() => dispatch(loadMyPlacesIds(type)));
             // .then(() => dispatch(recommendCommand()));
     }
 }
@@ -240,7 +241,7 @@ export function removePlace(id, type) {
                 method: "POST",
                 body: JSON.stringify({id: id, type: type})
             })
-            .then(() => dispatch(loadMyPlaces(type)));
+            .then(() => dispatch(loadMyPlacesIds(type)));
             // .then(() => dispatch(recommendCommand()));
     }
 }

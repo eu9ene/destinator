@@ -3,7 +3,6 @@ import React, {useState} from "react";
 import {PlacesMap} from "../components/map";
 import {PlaceCard} from "./placeCard";
 import InfiniteScroll from 'react-infinite-scroller';
-import Skeleton from "@material-ui/lab/Skeleton";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 
@@ -35,7 +34,6 @@ export const PlacesScreen = (props) => {
             <InfiniteScroll
                 loadMore={(page) => props.handleLoadMore && props.handleLoadMore(geoBounds)}
                 hasMore={props.hasMore}
-                // threshold={0}
                 pageStart={1}
             >
                 <Grid container spacing={3}>

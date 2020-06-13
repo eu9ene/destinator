@@ -16,7 +16,7 @@ export default function configureStore(preloadedState) {
                 thunk
             ),
         ),
-    )
+    );
 
     return store
 }

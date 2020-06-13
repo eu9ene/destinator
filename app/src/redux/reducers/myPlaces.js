@@ -1,4 +1,4 @@
-import {MYPLACES_LOAD_FINISHED} from "../actionTypes";
+import {MYPLACES_IDS_LOAD_FINISHED, MYPLACES_LOAD_FINISHED} from "../actionTypes";
 import {MyPlaceType} from "../constants"
 
 const initialState = {
@@ -12,10 +12,10 @@ const initialState = {
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
-        case MYPLACES_LOAD_FINISHED:
+        case MYPLACES_IDS_LOAD_FINISHED:
             const newPlacesIds = state.placesIds;
             if (action.payload.result != null) {
-                newPlacesIds[action.payload.type] = new Set(action.payload.result.map(p => p.id));
+                newPlacesIds[action.payload.type] = new Set(action.payload.result);
             } else {
                 newPlacesIds[action.payload.type] = new Set();
             }

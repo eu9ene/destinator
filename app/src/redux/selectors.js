@@ -10,7 +10,6 @@ export const getSuggestions = state => {
 };
 
 
-
 export const getCurrentPlace = state => {
     return {
         place: state.place.currentPlace
@@ -18,22 +17,17 @@ export const getCurrentPlace = state => {
 };
 
 
-
 export const getMyPlacesIds = (state) => {
-    return  state.myPlaces.placesIds;
+    return state.myPlaces.placesIds;
 
 };
 
 export const getGoogleKey = (state) => {
-    return  state.secrets.googleKey;
+    return state.secrets.googleKey;
 
 };
 
 
-export const getMyPlacesOfType = (state, type) => {
-    return {
-        places: state.myPlaces.places[type]
-    };
-};
+
 
 
