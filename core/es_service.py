@@ -258,9 +258,9 @@ class ElasticSearchService:
     @staticmethod
     def _get_photo(hit, size):
         if 'photo' not in hit['_source'] or not hit['_source']['photo']:
-            return "", ""
+            return ""
         if 'images' not in hit['_source']['photo']:
-            return "", ""
+            return ""
 
         photos = hit['_source']['photo']['images']
         if size not in photos:
