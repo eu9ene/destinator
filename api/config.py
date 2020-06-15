@@ -6,6 +6,6 @@ class AppConfig:
     LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')
 
     ES_HOST = os.getenv('ES_HOST', '0.0.0.0:9200')
-    ES_INDEX = 'ta-embs'
+    ES_INDEX = 'ta-embs-tags'
 
     GOOGLE_API_TOKEN = os.environ['GOOGLE_API_TOKEN']

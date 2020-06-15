@@ -12,6 +12,7 @@ import CardActions from "@material-ui/core/CardActions";
 import Box from "@material-ui/core/Box";
 import Rating from "@material-ui/lab/Rating";
 import Grid from "@material-ui/core/Grid";
+import {Tags} from "./tags";
 
 const getStyles = makeStyles((theme) => ({
     img: {
@@ -35,7 +36,7 @@ export const PlaceCard = (props) => {
     return (
         <Card onMouseEnter={handleOnHover} onMouseLeave={handleMouseLeave}>
             <CardActionArea onClick={() => history.push(`/place/${place.id}`)}
-                            >
+            >
                 {place.imageMedium &&
                 <CardMedia
                     component="img"
@@ -63,18 +64,17 @@ export const PlaceCard = (props) => {
                         </Grid>
                         <Grid item xs={12}>
                             <Typography variant="body2" color="textSecondary" component="p">
-                                {place.description!= null &&
+                                {place.description != null &&
                                 place.description.substring(0, Math.min(place.description.length, 200))}
                             </Typography>
                         </Grid>
                     </Grid>
                 </CardContent>
-
             </CardActionArea>
+            <Tags place={place}/>
             <CardActions disableSpacing>
                 <MyPlaceActions attrId={place.id}/>
-
             </CardActions>
         </Card>
-);
+    );
 };

@@ -9,7 +9,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {getGoogleKey} from "../redux/selectors";
 import {loadSecretsCommand} from "../redux/actions";
 import Popover from "@material-ui/core/Popover";
-import Box from "@material-ui/core/Box";
 import {PlaceSmallCard} from "./placeSmallCard";
 
 const useStyles = makeStyles((theme) => ({

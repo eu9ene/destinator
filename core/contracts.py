@@ -66,10 +66,11 @@ class Place(BaseModel):
     imageMedium: Optional[str]
     imageLarge: Optional[str]
     description: str
-    latitude: float
-    longitude: float
+    latitude: Optional[float]
+    longitude: Optional[float]
     tripadvisorUrl: str
     numReviews: int
+    tags:  List[str]
 
 
 class PlaceLight(BaseModel):

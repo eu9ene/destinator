@@ -10,6 +10,8 @@ import {MyPlaceActions} from "./myPlaceActions";
 import Link from "@material-ui/core/Link";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
+import Chip from "@material-ui/core/Chip";
+import {Tags} from "./tags";
 
 
 const mediaStyles = makeStyles((theme) => ({
@@ -25,7 +27,7 @@ const mediaStyles = makeStyles((theme) => ({
 }));
 
 
-export const PlaceBigCard =  (props) =>{
+export const PlaceBigCard = (props) => {
     const attr = props.attr;
     const classes = mediaStyles();
 
@@ -56,10 +58,13 @@ export const PlaceBigCard =  (props) =>{
                             </Typography></Box>
                         </div>
                     </Grid>
-                    <Grid item>
+                    <Grid item xs={12}>
                         <Typography variant="body2" color="textSecondary" component="p">
                             {attr.description}
                         </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Tags place={attr}/>
                     </Grid>
                 </Grid>
 
@@ -74,10 +79,12 @@ export const PlaceBigCard =  (props) =>{
                         <Link rel="noreferrer" target="_blank" variant="button" href={attr.website}>Website</Link>
                     </Box>}
                     <Box mr={2} component='span'>
-                        <Link rel="noreferrer"  target="_blank" variant="button" href={`https://www.google.ca/search?q=${attr.name}`}>Google</Link>
+                        <Link rel="noreferrer" target="_blank" variant="button"
+                              href={`https://www.google.ca/search?q=${attr.name}`}>Google</Link>
                     </Box>
                     <Box mr={2} component='span'>
-                        <Link rel="noreferrer" target="_blank" variant="button" href={attr.tripadvisorUrl}>TripAdvisor</Link>
+                        <Link rel="noreferrer" target="_blank" variant="button"
+                              href={attr.tripadvisorUrl}>TripAdvisor</Link>
                     </Box>
                 </Box>
 

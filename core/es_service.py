@@ -208,7 +208,10 @@ class ElasticSearchService:
                        latitude=hit["_source"]['latitude'],
                        longitude=hit["_source"]['longitude'],
                        tripadvisorUrl=hit["_source"].get('web_url', ""),
-                       numReviews=hit["_source"]['num_reviews'])
+                       numReviews=hit["_source"]['num_reviews'],
+                       tags=[tag['tag']
+                             for tag in sorted([tag for tag in hit["_source"]['tags'] if tag['weight'] > 0.1],
+                                               key=lambda t: t['weight'], reverse=True)])
 
                  for hit in docs]
         return attrs
