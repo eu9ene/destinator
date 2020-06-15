@@ -32,6 +32,10 @@ class PlacesRequest(PagedRequest):
     geoBounds: Optional[Dict[str, Dict[str, float]]] = Field(..., title='Geo bounds')
 
 
+class TagRequest(PlacesRequest):
+    tag: str
+
+
 class ByIdsRequest(BaseModel):
     ids: List[str] = Field(..., title='Attraction ids')
 
@@ -70,7 +74,7 @@ class Place(BaseModel):
     longitude: Optional[float]
     tripadvisorUrl: str
     numReviews: int
-    tags:  List[str]
+    tags: List[str]
 
 
 class PlaceLight(BaseModel):

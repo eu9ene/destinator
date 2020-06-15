@@ -9,3 +9,4 @@ class AppConfig:
     ES_INDEX = 'ta-embs-tags'
 
     GOOGLE_API_TOKEN = os.environ['GOOGLE_API_TOKEN']
+

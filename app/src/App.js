@@ -21,6 +21,7 @@ const Recommended = lazy(() => import('./routes/recommended'));
 const Place = lazy(() => import('./routes/place'));
 const MyPlaces = lazy(() => import('./routes/myplaces'));
 const Top = lazy(() => import('./routes/top'));
+const Tag = lazy(() => import('./routes/tag'));
 
 
 const themeX = createMuiTheme({
@@ -68,6 +69,7 @@ function App() {
                                         <Switch>
                                             <Route exact path='/myplaces' component={MyPlaces}/>
                                             <Route exact path={`/place/:id`} component={Place}/>
+                                            <Route exact path={`/tag/:tag`} component={Tag}/>
                                             <Route exact path='/recommended' component={Recommended}/>
                                             <Route exact path='/top' component={Top}/>
                                             <Route exact path="/">

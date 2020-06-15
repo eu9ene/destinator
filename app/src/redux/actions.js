@@ -99,6 +99,20 @@ function fetchTop(skip, geoBounds) {
         .then(searchResult => searchResult.json());
 }
 
+function fetchTag(tag, skip, geoBounds) {
+    return fetch('http://0.0.0.0:8000/search/bytag',
+        {
+            method: "POST",
+            body: JSON.stringify({
+                count: PAGE_SIZE,
+                skip: skip,
+                geoBounds: geoBounds,
+                tag: tag
+            })
+        })
+        .then(searchResult => searchResult.json());
+}
+
 export function findSimilarCommand(id, geoBounds = null) {
     return function (dispatch) {
         dispatch(loadRecsDone(null));
@@ -126,6 +140,21 @@ export function topCommand(geoBounds = null) {
 export function topMoreCommand(skip, geoBounds = null) {
     return function (dispatch) {
         return fetchTop(skip, geoBounds)
+            .then(searchResult => dispatch(loadMoreRecsDone(searchResult)));
+    };
+}
+
+export function tagCommand(tag, geoBounds = null) {
+    return function (dispatch) {
+        dispatch(loadRecsDone(null));
+        return fetchTag(tag,0, geoBounds)
+            .then(searchResult => dispatch(loadRecsDone(searchResult)));
+    };
+}
+
+export function tagMoreCommand(tag, skip, geoBounds = null) {
+    return function (dispatch) {
+        return fetchTag(tag, skip, geoBounds)
             .then(searchResult => dispatch(loadMoreRecsDone(searchResult)));
     };
 }

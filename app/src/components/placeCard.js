@@ -71,7 +71,6 @@ export const PlaceCard = (props) => {
                     </Grid>
                 </CardContent>
             </CardActionArea>
-            <Tags place={place}/>
             <CardActions disableSpacing>
                 <MyPlaceActions attrId={place.id}/>
             </CardActions>

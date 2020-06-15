@@ -4,6 +4,8 @@ from elasticsearch import Elasticsearch
 
 from core.contracts import Place, PlaceLight
 
+MAIN_TAG_THRESHOLD = 0.1
+
 
 class ElasticSearchService:
     def __init__(self, hosts: Dict, index: str):
@@ -51,6 +53,75 @@ class ElasticSearchService:
         res = self._es.search(index=self._index, body=query)
         attrs = [PlaceLight(id=hit['_id'], name=hit["_source"]['name'])
                  for hit in res['hits']['hits']]
+
+        return attrs
+
+    def search_by_tag(self, tag: str,
+                      count: int, skip: int = 0,
+                      geo_bounds: Dict = None) -> List[Place]:
+        bool_query = {
+            "must": [
+                {
+                    "match": {
+                        "category": "attraction"
+                    }
+                },
+                {
+                    "nested": {
+                        "path": "tags",
+                        "score_mode": "sum",
+                        "query": {
+                            "function_score": {
+                                "query": {
+                                    "bool": {
+                                        "must": [
+                                            {
+                                                "match": {
+                                                    "tags.tag": tag
+                                                }
+                                            },
+                                            {
+                                                "range": {"tags.weight": {"gt": MAIN_TAG_THRESHOLD}}
+                                            }
+                                        ]
+                                    }
+                                },
+                                "field_value_factor": {
+                                    "field": "tags.weight"
+                                },
+                                "boost_mode": "replace"
+                            }
+                        },
+                        "inner_hits": {"size": 10}
+                    }
+                }
+
+            ]
+        }
+
+        if geo_bounds:
+            bool_query['filter'] = {
+                "geo_bounding_box": {
+                    "location": {
+                        "top_left": {'lat': geo_bounds['nw']['lat'],
+                                     'lon': geo_bounds['nw']['lng']},
+                        "bottom_right": {'lat': geo_bounds['se']['lat'],
+                                         'lon': geo_bounds['se']['lng']}
+                    }
+                }
+            }
+
+        query = {
+            "size": count,
+            "from": skip,
+            "query": {
+                "bool": bool_query
+
+            }
+        }
+
+        res = self._es.search(index=self._index, body=query)
+        attrs = self._get_attrs(res['hits']['hits'])
 
         return attrs
 
@@ -195,7 +266,11 @@ class ElasticSearchService:
         if size not in photos:
             return ''
 
-        return photos[size]['url']
+        url = photos[size]['url']
+        if not url or not isinstance(url, str):
+            return None
+
+        return url
 
     def _get_attrs(self, docs: List[Dict]) -> List[Place]:
         attrs = [Place(id=hit['_id'],
@@ -210,8 +285,9 @@ class ElasticSearchService:
                        tripadvisorUrl=hit["_source"].get('web_url', ""),
                        numReviews=hit["_source"]['num_reviews'],
                        tags=[tag['tag']
-                             for tag in sorted([tag for tag in hit["_source"]['tags'] if tag['weight'] > 0.1],
-                                               key=lambda t: t['weight'], reverse=True)])
+                             for tag in
+                             sorted([tag for tag in hit["_source"]['tags'] if tag['weight'] > MAIN_TAG_THRESHOLD],
+                                    key=lambda t: t['weight'], reverse=True)])
 
                  for hit in docs]
         return attrs
