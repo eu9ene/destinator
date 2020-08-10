@@ -8,12 +8,15 @@ import {
 import {MyPlaceType, PAGE_SIZE} from "./constants";
 
 
+let API_IP  = process.env.API_IP ? process.env.API_IP : '0.0.0.0'
+let API_HOST = `http://{${API_IP}:8000`
+
 export function searchCommand(searchQuery, skip = 0) {
     return function (dispatch) {
         if (searchQuery === '') {
             return;
         }
-        return fetch('http://0.0.0.0:8000/search/byname',
+        return fetch(API_HOST+'/search/byname',
             {
                 method: "POST",
                 body: JSON.stringify({query: searchQuery, count: PAGE_SIZE, skip: skip})
@@ -37,7 +40,7 @@ export function searchSuggestionsLoaded(result) {
 export function loadPlaceCommand(id) {
     return function (dispatch) {
         dispatch(loadPlaceDone(null));
-        return fetch('http://0.0.0.0:8000/search/byids',
+        return fetch(API_HOST+'/search/byids',
             {
                 method: "POST",
                 body: JSON.stringify({ids: [id]})
@@ -63,7 +66,7 @@ export function loadPlaceDone(result, id) {
 
 
 function fetchSimilar(id, geoBounds, skip) {
-    return fetch('http://0.0.0.0:8000/recs/similar',
+    return fetch(API_HOST+'/recs/similar',
         {
             method: "POST",
             body: JSON.stringify({id: id, count: PAGE_SIZE, geoBounds: geoBounds, skip: skip})
@@ -73,7 +76,7 @@ function fetchSimilar(id, geoBounds, skip) {
 
 
 function fetchRecommendations(skip, geoBounds) {
-    return fetch('http://0.0.0.0:8000/recs/personal',
+    return fetch(API_HOST+'/recs/personal',
         {
             method: "POST",
             body: JSON.stringify({
@@ -86,7 +89,7 @@ function fetchRecommendations(skip, geoBounds) {
 }
 
 function fetchTop(skip, geoBounds) {
-    return fetch('http://0.0.0.0:8000/recs/top',
+    return fetch(API_HOST+'/recs/top',
         {
             method: "POST",
             body: JSON.stringify({
@@ -100,7 +103,7 @@ function fetchTop(skip, geoBounds) {
 }
 
 function fetchTag(tag, skip, geoBounds) {
-    return fetch('http://0.0.0.0:8000/search/bytag',
+    return fetch(API_HOST+'/search/bytag',
         {
             method: "POST",
             body: JSON.stringify({
@@ -200,7 +203,7 @@ export function loadMoreRecsDone(result) {
 export function loadMyPlaces(type) {
     return function (dispatch) {
         dispatch(loadRecsDone(null));
-        return fetch('http://0.0.0.0:8000/myplaces/places',
+        return fetch(API_HOST+'/myplaces/places',
             {
                 method: "POST",
                 body: JSON.stringify({type: type})
@@ -227,7 +230,7 @@ export function loadMyPlacesIdsAll() {
 
 export function loadMyPlacesIds(type) {
     return function (dispatch) {
-        return fetch('http://0.0.0.0:8000/myplaces/ids',
+        return fetch(API_HOST+'/myplaces/ids',
             {
                 method: "POST",
                 body: JSON.stringify({type: type})
@@ -253,7 +256,7 @@ function myPlacesIdsLoaded(res, type) {
 
 export function addPlace(id, type) {
     return function (dispatch) {
-        return fetch('http://0.0.0.0:8000/myplaces/add',
+        return fetch(API_HOST+'/myplaces/add',
             {
                 method: "POST",
                 body: JSON.stringify({id: id, type: type})
@@ -264,7 +267,7 @@ export function addPlace(id, type) {
 
 export function removePlace(id, type) {
     return function (dispatch) {
-        return fetch('http://0.0.0.0:8000/myplaces/remove',
+        return fetch(API_HOST+'/myplaces/remove',
             {
                 method: "POST",
                 body: JSON.stringify({id: id, type: type})
@@ -276,7 +279,7 @@ export function removePlace(id, type) {
 
 export function loadSecretsCommand() {
     return function (dispatch) {
-        return fetch('http://0.0.0.0:8000/secrets/load',
+        return fetch(API_HOST+'/secrets/load',
             {
                 method: "POST"
             })
