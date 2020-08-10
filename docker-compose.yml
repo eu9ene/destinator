@@ -1,19 +1,32 @@
 version: '2.2'
 services:
-#  api:
-#    image: destinator-api
-#    build:
-#      context: ./
-#      dockerfile: ./api/Dockerfile
-#    command: uvicorn --port=8000 --host=0.0.0.0 --no-access-log api.main:api
-#    depends_on:
-#      - es01
-#    ports:
-#      - 8000:8000
-#    environment:
-#      - ES_HOST=es01:9200
-#    networks:
-#      - elastic
+  app:
+    image: destinator-app
+    build:
+      context: ./
+      dockerfile: ./app/Dockerfile
+    tty: true
+    depends_on:
+      - api
+    ports:
+      - 3000:3000
+    networks:
+      - elastic
+  api:
+    image: destinator-api
+    build:
+      context: ./
+      dockerfile: ./api/Dockerfile
+    command: uvicorn --port=8000 --host=0.0.0.0 --no-access-log api.main:api
+    depends_on:
+      - es01
+    ports:
+      - 8000:8000
+    environment:
+      - GOOGLE_API_TOKEN=AIzaSyA62p93SEQ66rMayrN-a-PiCg_gRVR4uFU
+      - ES_HOST=es01:9200
+    networks:
+      - elastic
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
     container_name: es01

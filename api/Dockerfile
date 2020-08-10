@@ -11,6 +11,7 @@ RUN poetry config virtualenvs.create false
 RUN poetry install --no-dev --no-interaction --no-ansi
 
 ADD api ./api
+ADD core ./core
 
 
 ENV PYTHONPATH "${PYTHONPATH}:/app"
