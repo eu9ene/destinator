@@ -9,7 +9,7 @@ import {MyPlaceType, PAGE_SIZE} from "./constants";
 
 
 let API_IP  = process.env.API_IP ? process.env.API_IP : '0.0.0.0'
-let API_HOST = `http://{${API_IP}:8000`
+let API_HOST = `http://${API_IP}:8000`
 
 export function searchCommand(searchQuery, skip = 0) {
     return function (dispatch) {
